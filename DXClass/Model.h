@@ -1,5 +1,6 @@
 #pragma once
 #include "Mesh.h"
+
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -9,6 +10,7 @@
 #include <wrl.h>
 #include <d3d12.h>
 #include <d3dx12.h>
+#include <fbxsdk.h>
 
 //-----FBX-----//
 struct Node
@@ -46,7 +48,26 @@ private:
 	template <class T> using vector = std::vector<T>;
 
 	//-----FBXここから-----//
+public:// 定数
+	// ボーンインデックスの最大数
+	static const int MAX_BONE_INDICES = 4;
+
 public:
+	// ボーン構造体
+	struct Bone
+	{
+		// 名前
+		std::string name;
+		// 初期姿勢の逆行列
+		DirectX::XMMATRIX invInitPose;
+		// クラスター(FBX側のボーン情報)
+		FbxCluster* fbxCluster;
+		// コンストラクタ
+		Bone(const std::string& name) {
+			this->name = name;
+		}
+	};
+
 	// フレンドクラス
 	friend class FbxLoader;
 private:
@@ -54,20 +75,26 @@ private:
 	std::string fbxName;
 	// ノード配列
 	std::vector<Node> nodes;
+	// ボーン配列
+	std::vector<Bone> bones;
 
 public:// サブクラス
 	// 頂点データ構造体
-	struct VertexPosNormalUv
+	struct VertexPosNormalUvSkin
 	{
 		DirectX::XMFLOAT3 pos; // xyz
 		DirectX::XMFLOAT3 normal; // 法線ベクトル
 		DirectX::XMFLOAT2 uv; // uv
+		UINT boneIndex[MAX_BONE_INDICES];// ボーン 番号
+		float boneWeight[MAX_BONE_INDICES];// ボーン　重み
 	};
 
 	// メッシュを持つノード
 	Node* meshNode = nullptr;
+	// FBXシーン
+	FbxScene* fbxScene = nullptr;
 	// 頂点データ配列
-	std::vector<VertexPosNormalUv> vertices;
+	std::vector<VertexPosNormalUvSkin> vertices;
 	// 頂点インデックス配列
 	std::vector<unsigned short> indices;
 
@@ -103,6 +130,9 @@ public:
 	void FbxDraw(ID3D12GraphicsCommandList* cmdList);
 	// モデルの変形行列取得
 	const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }
+	// ゲッター
+	std::vector<Bone>& GetBones() { return bones; }
+	FbxScene* GetFbxScene() { return fbxScene; }
 	//-----FBXここまで-----//
 
 private:
@@ -134,4 +164,3 @@ private:
 	void CreateDescriptorHeap(); // デスクリプタヒープの生成
 	void LoadTextures(); // テクスチャ読み込み
 };
-
