@@ -16,7 +16,7 @@ void Model::CreateBuffers(ID3D12Device* device)
 {
 	HRESULT result;
 	// 頂点データ全体のサイズ
-	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUv) * vertices.size());
+	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUvSkin) * vertices.size());
 	
 	// 頂点バッファ生成
 	result = device->CreateCommittedResource(
@@ -27,7 +27,7 @@ void Model::CreateBuffers(ID3D12Device* device)
 		nullptr,
 		IID_PPV_ARGS(&vertBuff));
 	// 頂点バッファへのデータ転送
-	VertexPosNormalUv* vertMap = nullptr;
+	VertexPosNormalUvSkin* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	if (SUCCEEDED(result))
 	{
@@ -160,6 +160,9 @@ Model::~Model()
 		delete m.second;
 	}
 	materials.clear();
+	
+	// FBXシーンの解放
+	//fbxScene->Destroy();
 }
 
 void Model::Init(const std::string& modelname, bool smoothing)
