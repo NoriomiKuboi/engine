@@ -9,6 +9,7 @@
 
 #include "Model.h"
 #include "Camera.h"
+#include "FbxLoader.h"
 
 class ObjectFbx
 {
@@ -69,6 +70,19 @@ private:// メンバ関数
 	static ComPtr<ID3D12RootSignature> rootsignature;
 	// パイプラインステートオブジェクト
 	static ComPtr<ID3D12PipelineState> pipelinestate;
+
+public:// 定数
+	// ボーンの最大数
+	static const int MAX_BONES = 32;
+
+	// 定数バッファ用データ構造体
+	struct ConstBufferDataSkin
+	{
+		XMMATRIX bones[MAX_BONES];
+	};
+
+	// 定数バッファ(スキン)
+	ComPtr<ID3D12Resource> constBuffSkin;
 
 protected:
 	ComPtr<ID3D12Resource> constBuffTransform;
