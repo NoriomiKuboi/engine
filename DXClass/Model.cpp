@@ -162,7 +162,7 @@ Model::~Model()
 	materials.clear();
 	
 	// FBXƒV[ƒ“‚Ì‰ð•ú
-	//fbxScene->Destroy();
+	//zfbxScene->Destroy();
 }
 
 void Model::Init(const std::string& modelname, bool smoothing)

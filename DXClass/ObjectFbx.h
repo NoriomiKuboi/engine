@@ -59,6 +59,11 @@ public:// メンバ関数
 	/// <param name="model">モデル</param>
 	void SetModel(Model* model) { this->model = model; }
 
+	/// <summary>
+	/// アニメーション開始
+	/// </summary>
+	void PlayAnimation();
+
 public:// 静的メンバ関数
 	/// <summary>
 	/// グラフィックパイプライン生成
@@ -74,6 +79,21 @@ private:// メンバ関数
 public:// 定数
 	// ボーンの最大数
 	static const int MAX_BONES = 32;
+
+	// 1フレームの時間
+	FbxTime frameTime;
+
+	// アニメーション開始時間
+	FbxTime startTime;
+	
+	// アニメーション終了時間
+	FbxTime endTime;
+	
+	// 現在時間（アニメーション）
+	FbxTime currentTime;
+
+	// アニメーション再生中
+	bool isPlay = false;
 
 	// 定数バッファ用データ構造体
 	struct ConstBufferDataSkin
