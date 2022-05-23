@@ -133,7 +133,11 @@ void GameScene::Update()
 	//3Dオブジェクトにライトを設定
 	Object3d::SetLight(light);
 
-	objFbx->PlayAnimation();
+	if (input->TriggerKey(DIK_SPACE))
+	{
+		objFbx->PlayAnimation();
+	}
+
 	objFbx->Update();
 
 	//light->Update();
