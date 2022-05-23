@@ -134,6 +134,7 @@ void GameScene::Update()
 	//3Dオブジェクトにライトを設定
 	Object3d::SetLight(light);
 
+	objFbx->PlayAnimation();
 	objFbx->Update();
 
 	//light->Update();
