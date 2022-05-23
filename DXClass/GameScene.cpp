@@ -72,10 +72,9 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	objSample = Object3d::Create(modelSample);
 
 	// カメラ注視点をセット
-	camera->SetTarget({ 0, 0, -1 });
-	camera->SetDistance(10.0f);
-
-	objSample->SetPosition({ 0,0,0 });
+	camera->SetTarget({ 0, 2.5f, 0 });
+	camera->SetDistance(8.0f);
+	objSample->SetRotation({ 0,90,0 });
 
 	//ライトの生成
 	light = Light::Create();
@@ -149,7 +148,7 @@ void GameScene::Draw()
 	Sprite::BeforeDraw(cmdList);
 
 	// 背景スプライト描画
-	//sprite1->Draw();
+	sprite1->Draw();
 
 	// スプライト描画後処理
 	Sprite::AfterDraw();

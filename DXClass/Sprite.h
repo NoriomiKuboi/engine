@@ -35,7 +35,7 @@ public:
 	static void AfterDraw(); // 描画後処理
 	static Sprite* Create(UINT texNumber, XMFLOAT2 position, XMFLOAT4 color = { 1, 1, 1, 1 }, XMFLOAT2 anchorpoint = { 0.0f, 0.0f }, bool isFlipX = false, bool isFlipY = false); // スプライト生成
 
-private:
+protected:
 	static const int srvCount = 512; // テクスチャの最大枚数
 	static const int vertNum = 4; // 頂点数
 	static ID3D12Device* dev;
@@ -59,7 +59,7 @@ public:
 	void SetTextureRect(XMFLOAT2 texBase, XMFLOAT2 texSize); // テクスチャ範囲設
 	void Draw(); // 描画
 
-private:
+protected:
 	ComPtr<ID3D12Resource> vertBuff; // 頂点バッファ
 	ComPtr<ID3D12Resource> constBuff; // 定数バッファ
 	D3D12_VERTEX_BUFFER_VIEW vbView{}; // 頂点バッファビュー
