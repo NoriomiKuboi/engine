@@ -105,6 +105,7 @@
     <ClCompile Include="Object3d.cpp" />
     <ClCompile Include="ObjectFbx.cpp" />
     <ClCompile Include="ParticleManager.cpp" />
+    <ClCompile Include="PostEffect.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="WindowApp.cpp" />
   </ItemGroup>
@@ -129,6 +130,7 @@
     <ClInclude Include="Object3d.h" />
     <ClInclude Include="ObjectFbx.h" />
     <ClInclude Include="ParticleManager.h" />
+    <ClInclude Include="PostEffect.h" />
     <ClInclude Include="SafeDelete.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="WindowApp.h" />
