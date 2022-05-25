@@ -66,6 +66,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		// ゲームシーン更新処理
 		gameScene->Update();
 
+		// レンダーテクスチャへの描画
+		postEffect->BeforeDrawScene(dxCommon->GetCmdList());
+		gameScene->Draw();
+		postEffect->AfterDrawScene(dxCommon->GetCmdList());
+
 		// 描画開始
 		dxCommon->BeforeDraw();
 		// ポストエフェクトの描画

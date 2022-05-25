@@ -53,7 +53,7 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	Object3d::SetCamera(camera);
 
 	// テクスチャ読み込み
-	if (!Sprite::LoadTexture(1, L"Resources/background.png"))
+	if (!Sprite::LoadTexture(1, L"Resources/tex1.png"))
 	{
 		assert(0);
 		return;
