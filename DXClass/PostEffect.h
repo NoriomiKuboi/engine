@@ -36,6 +36,11 @@ public:
     /// <param name="cmdList">コマンドリスト</param>
     void AfterDrawScene(ID3D12GraphicsCommandList* cmdList);
 
+    /// <summary>
+    /// パイプライン生成
+    /// </summary>
+    void CreateGraphicsPipelineState();
+
 private:
     // テクスチャバッファ
     ComPtr<ID3D12Resource> texBuff;
@@ -47,5 +52,9 @@ private:
     ComPtr<ID3D12DescriptorHeap> descHeapRTV;
     // DSV用デスクリプタヒープ
     ComPtr<ID3D12DescriptorHeap> descHeapDSV;
+    // グラフィックスパイプライン
+    ComPtr<ID3D12PipelineState> pipelineState;
+    // ルートシグネチャ
+    ComPtr<ID3D12RootSignature> rootSignature;
 };
 
