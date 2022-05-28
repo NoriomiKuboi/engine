@@ -147,18 +147,19 @@ void GameScene::Draw()
 {
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* cmdList = dxCommon->GetCmdList();
+#pragma region 背景スプライト
+	//// 背景スプライト描画前処理
+	//Sprite::BeforeDraw(cmdList);
 
-	// 背景スプライト描画前処理
-	Sprite::BeforeDraw(cmdList);
+	//// 背景スプライト描画
+	//sprite1->Draw();
 
-	// 背景スプライト描画
-	sprite1->Draw();
+	//// スプライト描画後処理
+	//Sprite::AfterDraw();
 
-	// スプライト描画後処理
-	Sprite::AfterDraw();
-
-	// 深度バッファクリア
-	dxCommon->ClearDepthBuffer();
+	//// 深度バッファクリア
+	//dxCommon->ClearDepthBuffer();
+#pragma enderregion 
 
 	// 3Dオブジェクトの描画
 	Object3d::BeforeDraw(cmdList);
