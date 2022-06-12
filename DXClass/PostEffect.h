@@ -1,5 +1,7 @@
 #pragma once
 #include "Sprite.h"
+#include "Input.h"
+#include "SafeDelete.h"
 
 class PostEffect :
     public Sprite
@@ -7,16 +9,20 @@ class PostEffect :
 private:// 静的メンバ変数
     static const float clearColor[4];// 画面クリアカラー
 
+private:
+    Input* input = nullptr;
+
 public:
     /// <summary>
     /// コンストラクタ
     /// </summary>
     PostEffect();
+    ~PostEffect();
 
     /// <summary>
     /// 初期化
     /// </summary>
-    void Init();
+    void Init(Input* input);
 
     /// <summary>
     /// 描画コマンドの発行
@@ -43,7 +49,7 @@ public:
 
 private:
     // テクスチャバッファ
-    ComPtr<ID3D12Resource> texBuff;
+    ComPtr<ID3D12Resource> texBuff[2];
     // SRV用デスクリプタヒープ
     ComPtr<ID3D12DescriptorHeap> descHeapSRV;
     // 深度バッファ

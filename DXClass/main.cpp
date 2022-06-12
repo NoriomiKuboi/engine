@@ -48,7 +48,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//Sprite::LoadTexture(100, L"Resources/white1x1.png");
 	// ポストエフェクトの初期化
 	postEffect = new PostEffect();
-	postEffect->Init();
+	postEffect->Init(input);
 
 	// ゲームシーン初期化
 	gameScene = new GameScene();
