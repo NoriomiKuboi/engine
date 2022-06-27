@@ -102,6 +102,7 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Noise.cpp" />
     <ClCompile Include="Object3d.cpp" />
     <ClCompile Include="ObjectFbx.cpp" />
     <ClCompile Include="ParticleManager.cpp" />
@@ -127,6 +128,7 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="Noise.h" />
     <ClInclude Include="Object3d.h" />
     <ClInclude Include="ObjectFbx.h" />
     <ClInclude Include="ParticleManager.h" />
