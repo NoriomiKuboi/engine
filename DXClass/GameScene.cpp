@@ -15,11 +15,17 @@ GameScene::~GameScene()
 {
 	safe_delete(sprite1);
 	safe_delete(particleMan);
-	safe_delete(objSample);
 	safe_delete(modelSample);
 	safe_delete(modelFbx);
 	safe_delete(light);
 	safe_delete(objFbx);
+	for (int j = 0;j < cubeNum;j++)
+	{
+		for (int i = 0;i < cubeNum;i++)
+		{
+			safe_delete(objSample[j][i]);
+		}
+	}
 }
 
 void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
@@ -66,15 +72,20 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	particleMan = ParticleManager::Create(dxCommon->GetDev(), camera);
 
 	// モデル読み込み
-	modelSample = Model::CreateFromOBJ("taiyaki");
+	modelSample = Model::CreateFromOBJ("cubeSample");
 
 	// 3Dオブジェクト生成
-	objSample = Object3d::Create(modelSample);
+	for (int j = 0;j < cubeNum;j++)
+	{
+		for (int i = 0;i < cubeNum;i++)
+		{
+			objSample[j][i] = Object3d::Create(modelSample);
+		}
+	}
 
 	// カメラ注視点をセット
-	camera->SetTarget({ 0, 2.5f, 0 });
-	camera->SetDistance(8.0f);
-	objSample->SetRotation({ 0,90,0 });
+	camera->SetTarget({ 250.0f, 250.0f, 0 });
+	camera->SetDistance(500.0f);
 
 	//ライトの生成
 	light = Light::Create();
@@ -104,13 +115,8 @@ void GameScene::Update()
 	// パーティクル生成
 	CreateParticles();
 
-	//オブジェクトの回転
-	XMFLOAT3 rot = objSample->GetRotation();
-	rot.y += 1.0f;
-	objSample->SetRotation(rot);
-
 	//光線方向初期化
-	static XMVECTOR lightDir = { 0,1,5,0 };
+	static XMVECTOR lightDir = { 0,1,10,0 };
 	light->SetLightDir(lightDir);
 
 	std::ostringstream debugstr;
@@ -126,7 +132,15 @@ void GameScene::Update()
 
 	camera->Update();
 	particleMan->Update();
-	objSample->Update();
+	for (int j = 0;j < cubeNum;j++)
+	{
+		for (int i = 0;i < cubeNum;i++)
+		{
+			objSample[j][i]->SetScale({ 5.0f,5.0f,5.0f });
+			objSample[j][i]->SetPosition({ j * 10.0f ,i * 10.0f ,1});
+			objSample[j][i]->Update();
+		}
+	}
 
 	//ライトの色を設定
 	light->SetLightColor({ 1,1,1 });
@@ -140,7 +154,7 @@ void GameScene::Update()
 
 	objFbx->Update();
 
-	//light->Update();
+	light->Update();
 }
 
 void GameScene::Draw()
@@ -163,10 +177,16 @@ void GameScene::Draw()
 
 	// 3Dオブジェクトの描画
 	Object3d::BeforeDraw(cmdList);
-	//objSample->Draw();
+	for (int j = 0;j < cubeNum;j++)
+	{
+		for (int i = 0;i < cubeNum;i++)
+		{
+			objSample[j][i]->Draw();
+		}
+	}
 	Object3d::AfterDraw();
 
-	objFbx->Draw(cmdList);
+	//objFbx->Draw(cmdList);
 	// パーティクルの描画
 	//particleMan->Draw(cmdList);
 

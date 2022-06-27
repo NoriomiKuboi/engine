@@ -12,6 +12,7 @@
 #include "Light.h"
 #include "FbxLoader.h"
 #include "ObjectFbx.h"
+#include "Noise.h"
 
 class GameScene
 {
@@ -51,11 +52,15 @@ private:
 	ParticleManager* particleMan = nullptr;
 
 	// 3dObj : FBX
+	static const int cubeNum = 50; // 縦横cubeの数
 	Model* modelSample = nullptr;
 	Model* modelFbx = nullptr;
-	Object3d* objSample = nullptr;
+	Object3d* objSample[cubeNum][cubeNum] = { nullptr };
 	ObjectFbx* objFbx = nullptr;
 
 	// ライト
 	Light* light = nullptr;
+
+	// ノイズ
+	Noise* perlin = nullptr;
 };
