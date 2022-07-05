@@ -63,4 +63,6 @@ private:
 
 	// ÉmÉCÉY
 	Noise* perlin = nullptr;
+	XMFLOAT3 pos = { 0.0f,0.0f,0.0f };
+	bool random = true;
 };
