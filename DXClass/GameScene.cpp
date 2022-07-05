@@ -132,13 +132,29 @@ void GameScene::Update()
 
 	camera->Update();
 	particleMan->Update();
-	for (int j = 0;j < cubeNum;j++)
+	if (random == true)
 	{
-		for (int i = 0;i < cubeNum;i++)
+		for (int x = 0;x < cubeNum;x++)
 		{
-			objSample[j][i]->SetScale({ 5.0f,5.0f,5.0f });
-			objSample[j][i]->SetPosition({ j * 10.0f ,i * 10.0f ,1});
-			objSample[j][i]->Update();
+			for (int y = 0;y < cubeNum;y++)
+			{
+				pos.x = x * 10.0f;
+				pos.y = y * 10.0f;
+				pos.z = rand() % 60 - 30;
+				if (pos.z <= 0) { pos.z = 10000; }
+				objSample[x][y]->SetScale({ 5.0f,5.0f,5.0f });
+				objSample[x][y]->SetPosition(pos);
+			}
+		}
+
+		random = false;
+	}
+
+	for (int x = 0;x < cubeNum;x++)
+	{
+		for (int y = 0;y < cubeNum;y++)
+		{
+			objSample[x][y]->Update();
 		}
 	}
 

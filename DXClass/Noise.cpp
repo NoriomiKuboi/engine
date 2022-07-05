@@ -2,12 +2,12 @@
 
 float Noise::Perlin(float x, float y, float z)
 {
-	
+	return 0;
 }
 
 float Noise::Grad(int hash, float x, float y, float z)
 {
-	
+	return 0;
 }
 
 float Noise::Fade(float t)
