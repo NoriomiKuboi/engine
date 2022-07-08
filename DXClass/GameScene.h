@@ -63,6 +63,10 @@ private:
 
 	// ÉmÉCÉY
 	Noise* perlin = nullptr;
-	XMFLOAT3 pos = { 0.0f,0.0f,0.0f };
-	bool random = true;
+	XMFLOAT3 pos;
+	bool random;
+
+	const float RECT_SIZE = 32.0f;
+	const int COLOR_MAX = 255;
+	const int IMAGE_SIZE = 10;
 };
