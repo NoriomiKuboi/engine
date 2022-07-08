@@ -9,6 +9,8 @@ using namespace DirectX;
 
 GameScene::GameScene()
 {
+	pos = { 0.0f,0.0f,0.0f };
+	random = true;
 }
 
 GameScene::~GameScene()
@@ -19,6 +21,7 @@ GameScene::~GameScene()
 	safe_delete(modelFbx);
 	safe_delete(light);
 	safe_delete(objFbx);
+	safe_delete(perlin);
 	for (int j = 0;j < cubeNum;j++)
 	{
 		for (int i = 0;i < cubeNum;i++)
@@ -50,7 +53,7 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	debugText.Init(debugTextTexNumber);
 	
 	// 乱数初期化
-	srand(time(NULL));
+	//srand(time(NULL));
 
 	// カメラ生成
 	camera = new CameraSub(WindowApp::winWidth, WindowApp::winHeight, input);
@@ -108,6 +111,9 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	objFbx = new ObjectFbx;
 	objFbx->Init();
 	objFbx->SetModel(modelFbx);
+
+	perlin = new Noise;
+	perlin->CreateRandom(1);
 }
 
 void GameScene::Update()
@@ -132,7 +138,24 @@ void GameScene::Update()
 
 	camera->Update();
 	particleMan->Update();
-	if (random == true)
+	for (int i = 0; i < IMAGE_SIZE; i++)
+	{
+		for (int j = 0; j < IMAGE_SIZE; j++)
+		{
+			for (int k = 0;k < IMAGE_SIZE; k++)
+			{
+				float x = (float)i / RECT_SIZE;
+				float y = (float)j / RECT_SIZE;
+				float z = (float)k / RECT_SIZE;
+
+				const int r = (int)((float)COLOR_MAX * perlin->Perlin(x, y, z));
+				const int g = (int)((float)COLOR_MAX * perlin->Perlin(x, y, z));
+				const int b = (int)((float)COLOR_MAX * perlin->Perlin(x, y, z));
+			}
+		}
+	}
+
+	/*if (random == true)
 	{
 		for (int x = 0;x < cubeNum;x++)
 		{
@@ -156,7 +179,7 @@ void GameScene::Update()
 		{
 			objSample[x][y]->Update();
 		}
-	}
+	}*/
 
 	//ライトの色を設定
 	light->SetLightColor({ 1,1,1 });

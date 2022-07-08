@@ -13,8 +13,16 @@ private:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
+	Noise();
 	float Perlin(float x, float y, float z);
 	float Grad(int hash, float x, float y, float z);
 	float Fade(float t);
 	float Lerp(float a, float b, float x);
+	void CreateRandom(unsigned int seed);
+	int RandomGet(int x, int y,int z);
+
+public:
+	static const int maxNum = 256;
+	static const int tableNum = maxNum * 2;
+	int numCode[tableNum];
 };
