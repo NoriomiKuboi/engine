@@ -113,7 +113,7 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	objFbx->SetModel(modelFbx);
 
 	perlin = new Noise;
-	perlin->CreateRandom(1);
+	perlin->CreateRandom(0);
 }
 
 void GameScene::Update()
@@ -138,20 +138,15 @@ void GameScene::Update()
 
 	camera->Update();
 	particleMan->Update();
-	for (int i = 0; i < IMAGE_SIZE; i++)
+	for (int x = 0; x < cubeNum; x++)
 	{
-		for (int j = 0; j < IMAGE_SIZE; j++)
+		for (int y = 0; y < cubeNum; y++)
 		{
-			for (int k = 0;k < IMAGE_SIZE; k++)
-			{
-				float x = (float)i / RECT_SIZE;
-				float y = (float)j / RECT_SIZE;
-				float z = (float)k / RECT_SIZE;
-
-				const int r = (int)((float)COLOR_MAX * perlin->Perlin(x, y, z));
-				const int g = (int)((float)COLOR_MAX * perlin->Perlin(x, y, z));
-				const int b = (int)((float)COLOR_MAX * perlin->Perlin(x, y, z));
-			}
+			pos.x = x * 10.0f;
+			pos.y = y * 10.0f;
+			pos.z = perlin->Perlin(pos.x, pos.y);
+			objSample[x][y]->SetScale({ 5.0f,5.0f,5.0f });
+			objSample[x][y]->SetPosition(pos);
 		}
 	}
 
@@ -171,7 +166,7 @@ void GameScene::Update()
 		}
 
 		random = false;
-	}
+	}*/
 
 	for (int x = 0;x < cubeNum;x++)
 	{
@@ -179,7 +174,7 @@ void GameScene::Update()
 		{
 			objSample[x][y]->Update();
 		}
-	}*/
+	}
 
 	//ƒ‰ƒCƒg‚ÌF‚ðÝ’è
 	light->SetLightColor({ 1,1,1 });
