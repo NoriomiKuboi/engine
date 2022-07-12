@@ -20,8 +20,10 @@ public:
 	float Lerp(float a, float b, float x);
 	void CreateRandom(unsigned int seed);
 	int RandomGet(int x, int y);
+	float ValueGet(int x, int y);
 
 public:
+	static const int splitNum = 255;
 	static const int maxNum = 256;
 	static const int tableNum = maxNum * 2;
 	int numCode[tableNum];

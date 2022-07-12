@@ -32,6 +32,7 @@ public:
 	struct ConstBufferDataB0
 	{
 		//XMMATRIX mat;	// ３Ｄ変換行列
+		XMFLOAT4 color;
 		XMMATRIX viewproj;// ビュープロジェクション行列
 		XMMATRIX world;// ワールド行列
 		XMFLOAT3 cameraPos;// カメラ座標(ワールド座標)
@@ -64,8 +65,10 @@ public:
 	void Draw(); // 描画
 	const XMFLOAT3& GetPosition() { return position; } // 座標の取得
 	const XMFLOAT3& GetRotation() { return rotation; } //回転角の取得
+	const XMFLOAT4& GetColor() { return color; } // 色の取得
 	void SetPosition(XMFLOAT3 position) { this->position = position; } // 座標の設定
 	void SetRotation(XMFLOAT3 rotation) { this->rotation = rotation; } // 回転角の設定
+	void SetColor(XMFLOAT4 color) { this->color = color; } // 色の設定
 	void SetScale(XMFLOAT3 scale) { this->scale = scale; } // スケールの設定
 	void SetModel(Model* model) { this->model = model; } // モデルのセット
 	void SetBillboard(bool isBillboard) { this->isBillboard = isBillboard; } // ビルボードフラグのセット
