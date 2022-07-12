@@ -62,8 +62,6 @@ void Noise::CreateRandom(unsigned int seed)
 {
 	srand(seed);
 
-	memset(numCode, 0, sizeof(unsigned int) * _countof(numCode));
-
 	static const int num = maxNum;
 	unsigned int randomTable[maxNum];
 	for (int i = 0; i < _countof(randomTable); ++i)
@@ -84,9 +82,4 @@ int Noise::RandomGet(int x, int y)
 
 	return numCode[numCode[x] + y];
 	//return numCode[x + numCode[y]];
-}
-
-float Noise::ValueGet(int x, int y)
-{
-	return (float)RandomGet(x, y) / (float)(maxNum - 1);
 }
