@@ -87,8 +87,8 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	}
 
 	// カメラ注視点をセット
-	camera->SetTarget({ 250.0f, 250.0f, 0 });
-	camera->SetDistance(500.0f);
+	camera->SetTarget({ 25.0f, 25.0f, 0 });
+	camera->SetDistance(75.0f);
 
 	//ライトの生成
 	light = Light::Create();
@@ -134,7 +134,11 @@ void GameScene::Update()
 		<< cameraPos.x << ","
 		<< cameraPos.y << ","
 		<< cameraPos.z << ")";
-	debugText.Print(debugstr.str(), 50, 50, 1.0f);
+	debugText.Print(debugstr.str(), 30, 50, 1.0f);
+	debugText.Print("pos.z < 0 : red", 30, 120, 1.0f);
+	debugText.Print("pos.z > 0 && pos.z < 1 : green", 30, 140, 1.0f);
+	debugText.Print("pos.z > 1 : blue", 30, 160, 1.0f);
+	debugText.Print("pos.z == 0 : black", 30, 180, 1.0f);
 
 	camera->Update();
 	particleMan->Update();
@@ -142,11 +146,27 @@ void GameScene::Update()
 	{
 		for (int y = 0; y < cubeNum; y++)
 		{
-			pos.x = x * 10.0f;
-			pos.y = y * 10.0f;
+			pos.x = x;
+			pos.y = y;
 			pos.z = perlin->Perlin(pos.x, pos.y);
-			objSample[x][y]->SetScale({ 5.0f,5.0f,5.0f });
+			objSample[x][y]->SetScale({ 0.5f,0.5f,0.5f });
 			objSample[x][y]->SetPosition(pos);
+			if (pos.z < 0)
+			{
+				objSample[x][y]->SetColor({ 0.8f,0,0,1 });
+			}
+			if (pos.z > 0 && pos.z < 1)
+			{
+				objSample[x][y]->SetColor({ 0,0.8f,0,1 });
+			}
+			if (pos.z > 1)
+			{
+				objSample[x][y]->SetColor({ 0,0,0.8f,1 });
+			}
+			if (pos.z == 0)
+			{
+				objSample[x][y]->SetColor({ 0,0,0,1 });
+			}
 		}
 	}
 
