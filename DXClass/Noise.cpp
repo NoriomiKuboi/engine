@@ -10,24 +10,19 @@ Noise::Noise()
 
 float Noise::Perlin(float x, float y)
 {
-	//int xi = (int)x & 255;
-	//int yi = (int)y & 255;
-	int xi = (int)floorf(x);
-	int yi = (int)floorf(y);
+	int xi = (int)x / splitNum;
+	int yi = (int)y / splitNum;
 	float xf = x - xi;
 	float yf = y - yi;
-	float u = Fade(xf);
-	float v = Fade(yf);
+	float u = (x - splitNum * xi) / splitNum;
+	float v = (y - splitNum * yi) / splitNum;
+	Fade(u);
+	Fade(v);
 
-	//float aa = Grad(RandomGet(xi    , yi    ), xf       , yf);
-	//float ba = Grad(RandomGet(xi + 1, yi    ), xf - 1.0f, yf);
-	//float ab = Grad(RandomGet(xi    , yi + 1), xf       , yf - 1.0f);
-	//float bb = Grad(RandomGet(xi + 1, yi + 1), xf - 1.0f, yf - 1.0f);
-
-	float aa = Grad((numCode[numCode[xi] + yi]), xf, yf);
-	float ba = Grad((numCode[numCode[xi + 1] + yi]), xf - 1.0f, yf);
-	float ab = Grad((numCode[numCode[xi] + yi + 1]), xf, yf - 1.0f);
-	float bb = Grad((numCode[numCode[xi + 1] + yi + 1]), xf - 1.0f, yf - 1.0f);
+	float aa = Grad(RandomGet(xi    , yi    ), xf       , yf);
+	float ba = Grad(RandomGet(xi + 1, yi    ), xf - 1.0f, yf);
+	float ab = Grad(RandomGet(xi    , yi + 1), xf       , yf - 1.0f);
+	float bb = Grad(RandomGet(xi + 1, yi + 1), xf - 1.0f, yf - 1.0f);
 
 	float x1 = Lerp(aa, ba, u);
 	float x2 = Lerp(ab, bb, u);
@@ -89,4 +84,9 @@ int Noise::RandomGet(int x, int y)
 
 	return numCode[numCode[x] + y];
 	//return numCode[x + numCode[y]];
+}
+
+float Noise::ValueGet(int x, int y)
+{
+	return (float)RandomGet(x, y) / (float)(maxNum - 1);
 }
