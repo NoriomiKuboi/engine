@@ -135,10 +135,8 @@ void GameScene::Update()
 		<< cameraPos.y << ","
 		<< cameraPos.z << ")";
 	debugText.Print(debugstr.str(), 30, 50, 1.0f);
-	debugText.Print("pos.z < 0 : red", 30, 120, 1.0f);
-	debugText.Print("pos.z > 0 && pos.z < 1 : green", 30, 140, 1.0f);
-	debugText.Print("pos.z > 1 : blue", 30, 160, 1.0f);
-	debugText.Print("pos.z == 0 : black", 30, 180, 1.0f);
+	debugText.Print("pos.z >  1 : red", 30, 120, 1.0f);
+	debugText.Print("pos.z >= 0 : green", 30, 140, 1.0f);
 
 	camera->Update();
 	particleMan->Update();
@@ -151,21 +149,14 @@ void GameScene::Update()
 			pos.z = perlin->Perlin(pos.x, pos.y);
 			objSample[x][y]->SetScale({ 0.5f,0.5f,0.5f });
 			objSample[x][y]->SetPosition(pos);
-			if (pos.z < 0)
+			if (pos.z < 1)
 			{
-				objSample[x][y]->SetColor({ 0.8f,0,0,1 });
+				objSample[x][y]->SetColor({ 0.6f,0,0,1 });
 			}
-			if (pos.z > 0 && pos.z < 1)
+
+			if (pos.z >= 0)
 			{
-				objSample[x][y]->SetColor({ 0,0.8f,0,1 });
-			}
-			if (pos.z > 1)
-			{
-				objSample[x][y]->SetColor({ 0,0,0.8f,1 });
-			}
-			if (pos.z == 0)
-			{
-				objSample[x][y]->SetColor({ 0,0,0,1 });
+				objSample[x][y]->SetColor({ 0,0.6f,0,1 });
 			}
 		}
 	}
