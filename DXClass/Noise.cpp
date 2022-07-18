@@ -10,6 +10,12 @@ Noise::Noise()
 
 float Noise::Perlin(float x, float y)
 {
+	//int xi = (int)x & 255;
+	//int yi = (int)y & 255;
+	//float xf = x - floorf(xi);
+	//float yf = y - floorf(yi);
+	//float u = Fade(xf);
+	//float v = Fade(yf);
 	int xi = (int)x / splitNum;
 	int yi = (int)y / splitNum;
 	float xf = x - xi;
@@ -63,7 +69,7 @@ void Noise::CreateRandom(unsigned int seed)
 	srand(seed);
 
 	static const int num = maxNum;
-	unsigned int randomTable[maxNum];
+	int randomTable[maxNum];
 	for (int i = 0; i < _countof(randomTable); ++i)
 	{
 		randomTable[i] = rand() % maxNum;
