@@ -25,11 +25,13 @@ float Noise::Perlin(float x, float y)
 	Fade(u);
 	Fade(v);
 
+	// Œù”z‚ÌŒvZ
 	float aa = Grad(RandomGet(xi    , yi    ), xf       , yf);
 	float ba = Grad(RandomGet(xi + 1, yi    ), xf - 1.0f, yf);
 	float ab = Grad(RandomGet(xi    , yi + 1), xf       , yf - 1.0f);
 	float bb = Grad(RandomGet(xi + 1, yi + 1), xf - 1.0f, yf - 1.0f);
 
+	// •âŠÔ
 	float x1 = Lerp(aa, ba, u);
 	float x2 = Lerp(ab, bb, u);
 	float x3 = Lerp(x1, x2, v);
@@ -42,14 +44,14 @@ float Noise::Grad(int hash, float x, float y)
 	int value = hash % 0x4;
 	switch (value)
 	{
-	case 0x0: return x + y;
-	case 0x1: return -x + y;
-	case 0x2: return x - y;
-	case 0x3: return -x - y;
 	//case 0x0: return x;
 	//case 0x1: return -x;
 	//case 0x2: return -y;
 	//case 0x3: return y;
+	case 0x0: return x + y;
+	case 0x1: return -x + y;
+	case 0x2: return x - y;
+	case 0x3: return -x - y;
 	default: return 0;
 	}
 }
@@ -70,12 +72,12 @@ void Noise::CreateRandom(unsigned int seed)
 
 	static const int num = maxNum;
 	int randomTable[maxNum];
-	for (int i = 0; i < _countof(randomTable); ++i)
+	for (int i = 0; i < _countof(randomTable); i++)
 	{
 		randomTable[i] = rand() % maxNum;
 	}
 
-	for (int i = 0; i < _countof(numCode); ++i)
+	for (int i = 0; i < _countof(numCode); i++)
 	{
 		numCode[i] = randomTable[i % num];
 	}
