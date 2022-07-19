@@ -135,8 +135,6 @@ void GameScene::Update()
 		<< cameraPos.y << ","
 		<< cameraPos.z << ")";
 	debugText.Print(debugstr.str(), 30, 50, 1.0f);
-	debugText.Print("pos.z >  1 : red", 30, 120, 1.0f);
-	debugText.Print("pos.z >= 0 : green", 30, 140, 1.0f);
 
 	camera->Update();
 	particleMan->Update();
@@ -144,20 +142,12 @@ void GameScene::Update()
 	{
 		for (int y = 0; y < cubeNum; y++)
 		{
-			pos.x = x;
-			pos.y = y;
+			pos.x = float(x);
+			pos.y = float(y);
 			pos.z = perlin->Perlin(pos.x, pos.y);
 			objSample[x][y]->SetScale({ 0.5f,0.5f,0.5f });
+			objSample[x][y]->SetColor({ 0,0.4f,0,1 });
 			objSample[x][y]->SetPosition(pos);
-			if (pos.z < 1)
-			{
-				objSample[x][y]->SetColor({ 0.6f,0,0,1 });
-			}
-
-			if (pos.z >= 0)
-			{
-				objSample[x][y]->SetColor({ 0,0.6f,0,1 });
-			}
 		}
 	}
 
@@ -206,7 +196,7 @@ void GameScene::Draw()
 {
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* cmdList = dxCommon->GetCmdList();
-#pragma region 背景スプライト
+
 	//// 背景スプライト描画前処理
 	//Sprite::BeforeDraw(cmdList);
 
@@ -218,7 +208,6 @@ void GameScene::Draw()
 
 	//// 深度バッファクリア
 	//dxCommon->ClearDepthBuffer();
-#pragma enderregion 
 
 	// 3Dオブジェクトの描画
 	Object3d::BeforeDraw(cmdList);
