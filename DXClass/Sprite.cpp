@@ -374,6 +374,7 @@ bool Sprite::Init()
 	{
 		constMap->color = color;
 		constMap->mat = matProjection;
+		constMap->change = 0.0f;
 		constBuff->Unmap(0, nullptr);
 	}
 

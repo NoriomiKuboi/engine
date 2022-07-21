@@ -18,6 +18,9 @@ GameScene::~GameScene()
 	safe_delete(sprite1);
 	safe_delete(particleMan);
 	safe_delete(modelSample);
+	safe_delete(redCube);
+	safe_delete(greenCube);
+	safe_delete(blueCube);
 	safe_delete(modelFbx);
 	safe_delete(light);
 	safe_delete(objFbx);
@@ -29,6 +32,9 @@ GameScene::~GameScene()
 			safe_delete(objSample[j][i]);
 		}
 	}
+	safe_delete(redObj);
+	safe_delete(greenObj);
+	safe_delete(blueObj);
 }
 
 void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
@@ -76,6 +82,9 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 
 	// モデル読み込み
 	modelSample = Model::CreateFromOBJ("cubeSample");
+	redCube = Model::CreateFromOBJ("redCube");
+	greenCube = Model::CreateFromOBJ("greenCube");
+	blueCube = Model::CreateFromOBJ("blueCube");
 
 	// 3Dオブジェクト生成
 	for (int j = 0;j < cubeNum;j++)
@@ -86,9 +95,16 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 		}
 	}
 
+	redObj = Object3d::Create(redCube);
+	greenObj = Object3d::Create(greenCube);
+	blueObj = Object3d::Create(blueCube);
+
 	// カメラ注視点をセット
-	camera->SetTarget({ 25.0f, 25.0f, 0 });
-	camera->SetDistance(75.0f);
+	//camera->SetTarget({ 25.0f, 25.0f, 0 });
+	//camera->SetDistance(75.0f);
+
+	camera->SetTarget({ 0.0f, 3.0f, 0 });
+	camera->SetDistance(10.0f);
 
 	//ライトの生成
 	light = Light::Create();
@@ -151,6 +167,10 @@ void GameScene::Update()
 		}
 	}
 
+	redObj->SetPosition({ -7,1,1 });
+	greenObj->SetPosition({ 0,1,1 });
+	blueObj->SetPosition({ 7,1,1 });
+
 	/*if (random == true)
 	{
 		for (int x = 0;x < cubeNum;x++)
@@ -169,6 +189,31 @@ void GameScene::Update()
 		random = false;
 	}*/
 
+	if (input->PushKey(DIK_1))
+	{
+		PostEffect::frag = 1.0f;
+	}
+
+	else if (input->PushKey(DIK_2))
+	{
+		PostEffect::frag = 2.0f;
+	}
+
+	else if (input->PushKey(DIK_3))
+	{
+		PostEffect::frag = 3.0f;
+	}
+
+	else if (input->PushKey(DIK_4))
+	{
+		PostEffect::frag = 4.0f;
+	}
+
+	else
+	{
+		PostEffect::frag = 0.0f;
+	}
+
 	for (int x = 0;x < cubeNum;x++)
 	{
 		for (int y = 0;y < cubeNum;y++)
@@ -176,6 +221,10 @@ void GameScene::Update()
 			objSample[x][y]->Update();
 		}
 	}
+
+	redObj->Update();
+	greenObj->Update();
+	blueObj->Update();
 
 	//ライトの色を設定
 	light->SetLightColor({ 1,1,1 });
@@ -215,9 +264,14 @@ void GameScene::Draw()
 	{
 		for (int i = 0;i < cubeNum;i++)
 		{
-			objSample[j][i]->Draw();
+			//objSample[j][i]->Draw();
 		}
 	}
+
+	redObj->Draw();
+	greenObj->Draw();
+	blueObj->Draw();
+
 	Object3d::AfterDraw();
 
 	//objFbx->Draw(cmdList);

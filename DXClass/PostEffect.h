@@ -8,10 +8,6 @@ class PostEffect :
 {
 private:// 静的メンバ変数
     static const float clearColor[4];// 画面クリアカラー
-
-private:
-    Input* input = nullptr;
-
 public:
     /// <summary>
     /// コンストラクタ
@@ -22,7 +18,7 @@ public:
     /// <summary>
     /// 初期化
     /// </summary>
-    void Init(Input* input);
+    void Init();
 
     /// <summary>
     /// 描画コマンドの発行
@@ -46,6 +42,8 @@ public:
     /// パイプライン生成
     /// </summary>
     void CreateGraphicsPipelineState();
+
+    static float frag;
 
 private:
     // テクスチャバッファ
