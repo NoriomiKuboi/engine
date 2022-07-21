@@ -13,6 +13,7 @@
 #include "FbxLoader.h"
 #include "ObjectFbx.h"
 #include "Noise.h"
+#include "PostEffect.h"
 
 class GameScene
 {
@@ -54,8 +55,14 @@ private:
 	// 3dObj : FBX
 	static const int cubeNum = 50; // ècâ°cubeÇÃêî
 	Model* modelSample = nullptr;
+	Model* redCube = nullptr;
+	Model* greenCube = nullptr;
+	Model* blueCube = nullptr;
 	Model* modelFbx = nullptr;
 	Object3d* objSample[cubeNum][cubeNum] = { nullptr };
+	Object3d* redObj = nullptr;
+	Object3d* greenObj = nullptr;
+	Object3d* blueObj = nullptr;
 	ObjectFbx* objFbx = nullptr;
 
 	// ÉâÉCÉg

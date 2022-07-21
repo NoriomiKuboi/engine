@@ -9,6 +9,7 @@
 using namespace DirectX;
 
 const float PostEffect::clearColor[4] = { 0.25f,0.5f,0.1f,0.0f };// 緑っぽい色
+float PostEffect::frag = 0.0f;
 
 PostEffect::PostEffect()
 	: Sprite(
@@ -24,16 +25,11 @@ PostEffect::PostEffect()
 
 PostEffect::~PostEffect()
 {
-	safe_delete(input);
+
 }
 
-void PostEffect::Init(Input* input)
+void PostEffect::Init()
 {
-	// nullptrチェック
-	assert(input);
-
-	this->input = input;
-
 	HRESULT result;
 
 	// 基底クラスとしての初期化
@@ -234,6 +230,7 @@ void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList)
 	{
 		constMap->color = this->color;
 		constMap->mat = XMMatrixIdentity();
+		constMap->change = PostEffect::frag;
 		this->constBuff->Unmap(0, nullptr);
 	}
 

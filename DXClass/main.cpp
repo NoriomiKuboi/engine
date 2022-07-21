@@ -45,10 +45,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	FbxLoader::GetInstance()->Init(dxCommon->GetDev());
 
 	// ポストエフェクト用テクスチャ読み込み
-	//Sprite::LoadTexture(100, L"Resources/white1x1.png");
+	Sprite::LoadTexture(100, L"Resources/white1x1.png");
 	// ポストエフェクトの初期化
 	postEffect = new PostEffect();
-	postEffect->Init(input);
+	postEffect->Init();
 
 	// ゲームシーン初期化
 	gameScene = new GameScene();
@@ -67,16 +67,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		gameScene->Update();
 
 		// レンダーテクスチャへの描画
-		//postEffect->BeforeDrawScene(dxCommon->GetCmdList());
-		//gameScene->Draw();
-		//postEffect->AfterDrawScene(dxCommon->GetCmdList());
+		postEffect->BeforeDrawScene(dxCommon->GetCmdList());
+		gameScene->Draw();
+		postEffect->AfterDrawScene(dxCommon->GetCmdList());
 
 		// 描画開始
 		dxCommon->BeforeDraw();
 		// ポストエフェクトの描画
-		///postEffect->Draw(dxCommon->GetCmdList());
+		postEffect->Draw(dxCommon->GetCmdList());
 		// ゲームシーン描画
-		gameScene->Draw();
+		//gameScene->Draw();
 		// 描画終了
 		dxCommon->AfterDraw();
 

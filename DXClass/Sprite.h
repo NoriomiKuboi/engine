@@ -26,6 +26,7 @@ public:
 	{
 		XMFLOAT4 color;	// F (RGBA)
 		XMMATRIX mat;	// ‚R‚c•ÏŠ·s—ñ
+		float change;
 	};
 
 public:
