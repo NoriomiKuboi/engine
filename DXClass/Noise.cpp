@@ -10,20 +10,20 @@ Noise::Noise()
 
 float Noise::Perlin(float x, float y)
 {
-	//int xi = (int)x & 255;
-	//int yi = (int)y & 255;
-	//float xf = x - floorf(xi);
-	//float yf = y - floorf(yi);
-	//float u = Fade(xf);
-	//float v = Fade(yf);
-	int xi = (int)x / splitNum;
-	int yi = (int)y / splitNum;
-	float xf = x - xi;
-	float yf = y - yi;
-	float u = (x - splitNum * xi) / splitNum;
-	float v = (y - splitNum * yi) / splitNum;
-	Fade(u);
-	Fade(v);
+	int xi = (int)x & 255;
+	int yi = (int)y & 255;
+	float xf = x - floorf(xi);
+	float yf = y - floorf(yi);
+	float u = Fade(xf);
+	float v = Fade(yf);
+	//int xi = (int)x / splitNum;
+	//int yi = (int)y / splitNum;
+	//float xf = x - xi;
+	//float yf = y - yi;
+	//float u = (x - splitNum * xi) / splitNum;
+	//float v = (y - splitNum * yi) / splitNum;
+	//Fade(u);
+	//Fade(v);
 
 	// Œù”z‚ÌŒvŽZ
 	float aa = Grad(RandomGet(xi    , yi    ), xf       , yf);
