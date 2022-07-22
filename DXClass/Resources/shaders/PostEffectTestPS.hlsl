@@ -20,7 +20,7 @@ float4 main(VSOutput input) : SV_TARGET
 	if (change == 1.0f)
 	{
 		float4 _color0 = texcolor0;
-		float grayscale = _color0.r * 0.299 + _color0.g * 0.587 + _color0.b * 0.114;
+		float grayscale = _color0.r * 0.299f + _color0.g * 0.587f + _color0.b * 0.114f;
 
 		// グレイスケール
 		return float4(grayscale, grayscale, grayscale, 1);
@@ -31,13 +31,13 @@ float4 main(VSOutput input) : SV_TARGET
 		float2 uv = 2 * input.uv - 1;
 
 		float r = length(uv);
-		r = 0.7 * r - 0.7;
+		r = 0.7f * r - 0.7f;
 
 		float a = atan2(uv.y, uv.x);
 		a = abs(cos(50 * a) + sin(20 * a));
 
 		float d = a - r;
-		float n = smoothstep(0.1, 0.4, saturate(d));
+		float n = smoothstep(0.1f, 0.4f, saturate(d));
 
 		float4 _color1 = tex0.Sample(smp, input.uv);
 
@@ -50,8 +50,8 @@ float4 main(VSOutput input) : SV_TARGET
 		float2 uv = input.uv;
 		float4 _color2 = tex0.Sample(smp, input.uv);
 
-		uv = 2. * uv - 1.;
-		_color2 *= 1.0 - dot(uv, uv);
+		uv = 2.0f * uv - 1.0f;
+		_color2 *= 1.0f - dot(uv, uv);
 
 		// ヴィネット
 		return _color2;
