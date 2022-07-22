@@ -28,25 +28,6 @@ float4 main(VSOutput input) : SV_TARGET
 
 	if (change == 2.0f)
 	{
-		float2 uv = 2 * input.uv - 1;
-
-		float r = length(uv);
-		r = 0.7f * r - 0.7f;
-
-		float a = atan2(uv.y, uv.x);
-		a = abs(cos(50 * a) + sin(20 * a));
-
-		float d = a - r;
-		float n = smoothstep(0.1f, 0.4f, saturate(d));
-
-		float4 _color1 = tex0.Sample(smp, input.uv);
-
-		// 集中線
-		return n * _color1;
-	}
-
-	if (change == 3.0f)
-	{
 		float2 uv = input.uv;
 		float4 _color2 = tex0.Sample(smp, input.uv);
 
@@ -57,11 +38,31 @@ float4 main(VSOutput input) : SV_TARGET
 		return _color2;
 	}
 
-	if (change == 4.0f)
+	if (change == 3.0f)
 	{
 		// 単色シェーダー
 		return float4 (1, 1, 0, 1);
 	}
+
+	//if (change == 4.0f)
+	//{
+	//	float2 uv = 2 * input.uv - 1;
+	//
+	//	float r = length(uv);
+	//	r = 0.9f * r - 0.9f;
+	//
+	//	float a = atan2(uv.y, uv.x);
+	//	a = abs(cos(50 * a) + sin(20 * a));
+	//
+	//	float d = a - r;
+	//	float n = smoothstep(0.1f, 0.4f, saturate(d));
+	//
+	//	float4 _color1 = tex0.Sample(smp, input.uv);
+	//
+	//	// 集中線
+	//	return n * _color1;
+	//}
+
 
 	// 色反転
 	return float4 (1.0f - texcolor0.r, 1.0f - texcolor0.g, 1.0f - texcolor0.b, 1.0f);
