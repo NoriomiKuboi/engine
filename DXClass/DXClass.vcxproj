@@ -108,7 +108,9 @@
     <ClCompile Include="ParticleManager.cpp" />
     <ClCompile Include="PostEffect.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="Vec2.cpp" />
     <ClCompile Include="WindowApp.cpp" />
+    <ClCompile Include="XInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="DirectXTex\DirectXTex_Desktop_2019_Win10.vcxproj">
@@ -135,7 +137,9 @@
     <ClInclude Include="PostEffect.h" />
     <ClInclude Include="SafeDelete.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="Vec2.h" />
     <ClInclude Include="WindowApp.h" />
+    <ClInclude Include="XInput.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\FBX.hlsli" />

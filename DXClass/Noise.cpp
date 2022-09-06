@@ -12,10 +12,17 @@ float Noise::Perlin(float x, float y)
 {
 	int xi = (int)x & 255;
 	int yi = (int)y & 255;
+
 	float xf = x - floorf(xi);
 	float yf = y - floorf(yi);
 	float u = Fade(xf);
 	float v = Fade(yf);
+
+	//float topR = ();
+	//float topL = ();
+	//float bottomR = ();
+	//float bottomL = ();
+
 	//int xi = (int)x / splitNum;
 	//int yi = (int)y / splitNum;
 	//float xf = x - xi;

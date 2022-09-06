@@ -15,6 +15,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	std::unique_ptr<Audio> audio(new Audio);
 	std::unique_ptr<GameScene> gameScene(new GameScene);
 	std::unique_ptr<PostEffect> postEffect(new PostEffect);
+	XInput* Xinput = nullptr;
 
 	// ゲームウィンドウ作成
 	win->WindowCreate();
@@ -24,6 +25,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	// 入力初期化
 	input->Init(win->GetInstance(), win->GetHwnd());
+	Xinput = XInput::GetInstance();
+	Xinput->Init();
 
 	// オーディオ初期化
 	audio->Init();
@@ -56,21 +59,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		// 入力関連の更新処理
 		input->Update();
+		Xinput->Update();
 
 		// ゲームシーン更新処理
 		gameScene->Update();
 
 		// レンダーテクスチャへの描画
-		postEffect->BeforeDrawScene(dxCommon->GetCmdList());
-		gameScene->Draw();
-		postEffect->AfterDrawScene(dxCommon->GetCmdList());
+		//postEffect->BeforeDrawScene(dxCommon->GetCmdList());
+		//gameScene->Draw();
+		//postEffect->AfterDrawScene(dxCommon->GetCmdList());
 
 		// 描画開始
 		dxCommon->BeforeDraw();
 		// ポストエフェクトの描画
-		postEffect->Draw(dxCommon->GetCmdList());
+		//postEffect->Draw(dxCommon->GetCmdList());
 		// ゲームシーン描画
-		//gameScene->Draw();
+		gameScene->Draw();
 		// 描画終了
 		dxCommon->AfterDraw();
 

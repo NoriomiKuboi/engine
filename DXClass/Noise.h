@@ -1,5 +1,6 @@
 #pragma once
 #include "Object3d.h"
+#include "Vec2.h"
 
 #include <DirectXMath.h>
 
