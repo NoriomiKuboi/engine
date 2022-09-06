@@ -21,38 +21,39 @@ void CameraSub::Update()
 
 	// マウスの入力を取得
 	Input::MouseMove mouseMove = input->GetMouseMove();
+	XInput* Xinput = XInput::GetInstance();
 
 	// マウスの左ボタンが押されていたらカメラを回転
-	if (input->PushMouseLeft())
-	{
-		float dy = mouseMove.lX * scaleY;
-		float dx = mouseMove.lY * scaleX;
-
-		angleX = -dx * XM_PI;
-		angleY = -dy * XM_PI;
-		dirty = true;
-	}
-
-	// マウスの中ボタンが押されていたらカメラを並行移動
-	if (input->PushMouseMiddle())
-	{
-		float dx = mouseMove.lX / 100.0f;
-		float dy = mouseMove.lY / 100.0f;
-
-		XMVECTOR move = { -dx, +dy, 0, 0 };
-		move = XMVector3Transform(move, matRot);
-
-		MoveVector(move);
-		dirty = true;
-	}
-
-	// ホイールで距離を変更
-	if (mouseMove.lZ != 0)
-	{
-		distance -= mouseMove.lZ / 100.0f;
-		distance = max(distance, 1.0f);
-		dirty = true;
-	}
+	//if (input->PushMouseLeft())
+	//{
+	//	float dy = mouseMove.lX * scaleY;
+	//	float dx = mouseMove.lY * scaleX;
+	//
+	//	angleX = -dx * XM_PI;
+	//	angleY = -dy * XM_PI;
+	//	dirty = true;
+	//}
+	//
+	//// マウスの中ボタンが押されていたらカメラを並行移動
+	//if (input->PushMouseMiddle())
+	//{
+	//	float dx = mouseMove.lX / 100.0f;
+	//	float dy = mouseMove.lY / 100.0f;
+	//
+	//	XMVECTOR move = { -dx, +dy, 0, 0 };
+	//	move = XMVector3Transform(move, matRot);
+	//
+	//	MoveVector(move);
+	//	dirty = true;
+	//}
+	//
+	//// ホイールで距離を変更
+	//if (mouseMove.lZ != 0)
+	//{
+	//	distance -= mouseMove.lZ / 100.0f;
+	//	distance = max(distance, 1.0f);
+	//	dirty = true;
+	//}
 
 	if (dirty || viewDirty)
 	{

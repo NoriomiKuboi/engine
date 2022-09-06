@@ -14,6 +14,14 @@
 #include "ObjectFbx.h"
 #include "Noise.h"
 #include "PostEffect.h"
+#include "XInput.h"
+
+enum Scene
+{
+	title,
+	game,
+	end
+};
 
 class GameScene
 {
@@ -48,22 +56,48 @@ private:
 
 	// スプライト
 	Sprite* sprite1 = nullptr;
+	Sprite* titleSprite = nullptr;
+	Sprite* endSprite = nullptr;
+	Sprite* num0a = nullptr;
+	Sprite* num1a = nullptr;
+	Sprite* num2a = nullptr;
+	Sprite* num3a = nullptr;
+	Sprite* num0b = nullptr;
+	Sprite* num1b = nullptr;
+	Sprite* num2b = nullptr;
+	Sprite* num3b = nullptr;
+	Sprite* num4 = nullptr;
+	Sprite* num5 = nullptr;
+	Sprite* num6 = nullptr;
+	Sprite* num7 = nullptr;
+	Sprite* num8 = nullptr;
+	Sprite* num9 = nullptr;
+	Sprite* back = nullptr;
 
 	// パーティクル
 	ParticleManager* particleMan = nullptr;
 
 	// 3dObj : FBX
-	static const int cubeNum = 50; // 縦横cubeの数
+	static const int cubeNum = 9; // 縦横cubeの数
 	Model* modelSample = nullptr;
-	Model* redCube = nullptr;
-	Model* greenCube = nullptr;
-	Model* blueCube = nullptr;
 	Model* modelFbx = nullptr;
 	Object3d* objSample[cubeNum][cubeNum] = { nullptr };
-	Object3d* redObj = nullptr;
-	Object3d* greenObj = nullptr;
-	Object3d* blueObj = nullptr;
+	Object3d* obj = nullptr;
 	ObjectFbx* objFbx = nullptr;
+
+	// シーン
+	int scene = Scene::title;
+
+	XMFLOAT3 subPos;
+	const float g = 9.8f / 60.0f;
+	float vec;
+	bool trigger1;
+	bool trigger2;
+
+	int time;
+	int secTen;
+	int secOne;
+	int count;
 
 	// ライト
 	Light* light = nullptr;
