@@ -125,10 +125,15 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 
 	perlin = new Noise;
 	perlin->CreateRandom(0);
+
 }
 
 void GameScene::Update()
 {
+	ImGui::Begin("buri");
+	ImGui::SetWindowSize(ImVec2(400, 500), ImGuiCond_::ImGuiCond_FirstUseEver);
+	ImGui::End();
+
 	XInputManager* Xinput = XInputManager::GetInstance();
 
 	// パーティクル生成
