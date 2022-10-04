@@ -15,7 +15,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	std::unique_ptr<Audio> audio(new Audio);
 	std::unique_ptr<GameScene> gameScene(new GameScene);
 	std::unique_ptr<PostEffect> postEffect(new PostEffect);
-	XInput* Xinput = nullptr;
+	XInputManager* Xinput = nullptr;
 
 	// ゲームウィンドウ作成
 	win->WindowCreate();
@@ -25,7 +25,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	// 入力初期化
 	input->Init(win->GetInstance(), win->GetHwnd());
-	Xinput = XInput::GetInstance();
+	Xinput = XInputManager::GetInstance();
 	Xinput->Init();
 
 	// オーディオ初期化

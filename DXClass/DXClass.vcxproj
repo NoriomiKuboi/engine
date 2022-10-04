@@ -110,7 +110,7 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Vec2.cpp" />
     <ClCompile Include="WindowApp.cpp" />
-    <ClCompile Include="XInput.cpp" />
+    <ClCompile Include="XInputManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="DirectXTex\DirectXTex_Desktop_2019_Win10.vcxproj">
@@ -139,7 +139,7 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="WindowApp.h" />
-    <ClInclude Include="XInput.h" />
+    <ClInclude Include="XInputManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\FBX.hlsli" />

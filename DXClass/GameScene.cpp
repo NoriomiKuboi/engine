@@ -129,7 +129,7 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 
 void GameScene::Update()
 {
-	XInput* Xinput = XInput::GetInstance();
+	XInputManager* Xinput = XInputManager::GetInstance();
 
 	// パーティクル生成
 	CreateParticles();

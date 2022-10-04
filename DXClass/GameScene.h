@@ -14,7 +14,7 @@
 #include "ObjectFbx.h"
 #include "Noise.h"
 #include "PostEffect.h"
-#include "XInput.h"
+#include "XInputManager.h"
 
 class GameScene
 {
