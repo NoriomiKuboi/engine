@@ -154,7 +154,7 @@ public://メンバ関数
 	bool TriggerRightStickX(bool LeftRight);
 
 	/// <summary>
-	/// 右スティックのX軸トリガーでチェック
+	/// 右スティックのY軸トリガーでチェック
 	/// </summary>
 	/// <param name="UpDown">Up -> true / Down -> false</param>
 	/// <returns>true/false</returns>

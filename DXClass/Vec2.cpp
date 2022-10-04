@@ -8,6 +8,8 @@ float Vec2::VecValue(float x, float y)
 {
 	numX = x;
 	numY = y;
+
+	return 0;
 }
 
 const float Vec2::dot(const float x, const float y)
