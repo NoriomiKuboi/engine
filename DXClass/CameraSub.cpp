@@ -21,7 +21,7 @@ void CameraSub::Update()
 
 	// マウスの入力を取得
 	Input::MouseMove mouseMove = input->GetMouseMove();
-	XInput* Xinput = XInput::GetInstance();
+	XInputManager* Xinput = XInputManager::GetInstance();
 
 	// マウスの左ボタンが押されていたらカメラを回転
 	//if (input->PushMouseLeft())

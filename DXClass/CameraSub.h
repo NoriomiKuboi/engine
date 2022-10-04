@@ -1,7 +1,7 @@
 #pragma once
 #include "Camera.h"
 #include "Input.h"
-#include "XInput.h"
+#include "XInputManager.h"
 
 class CameraSub : public Camera
 {

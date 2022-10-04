@@ -16,19 +16,19 @@
 
 #include <DirectXMath.h>
 
-class XInput final
+class XInputManager final
 {
 private: //シングルトン化
 	//コンストラクタを隠蔽
-	XInput() = default;
+	XInputManager() = default;
 	//デストラクタを隠蔽
-	~XInput();
+	~XInputManager();
 
 public:
 	//コピーコンストラクタを無効化
-	XInput(const XInput& input) = delete;
+	XInputManager(const XInputManager& input) = delete;
 	//代入演算子を無効化
-	void operator = (const XInput& input) = delete;
+	void operator = (const XInputManager& input) = delete;
 
 private://メンバ構造体
 
@@ -78,7 +78,7 @@ public://メンバ関数
 	/// インスタンス取得
 	/// </summary>
 	/// <returns>入力</returns>
-	static XInput* GetInstance();
+	static XInputManager* GetInstance();
 
 	/// <summary>
 	/// 初期化
