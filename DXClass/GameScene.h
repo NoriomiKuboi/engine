@@ -15,6 +15,7 @@
 #include "Noise.h"
 #include "PostEffect.h"
 #include "XInputManager.h"
+#include "ImguiManager.h"
 
 class GameScene
 {

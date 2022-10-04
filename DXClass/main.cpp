@@ -2,6 +2,7 @@
 //#include "fbxsdk.h"
 #include "FbxLoader.h"
 #include "PostEffect.h"
+#include "ImguiManager.h"
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
@@ -16,6 +17,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	std::unique_ptr<GameScene> gameScene(new GameScene);
 	std::unique_ptr<PostEffect> postEffect(new PostEffect);
 	XInputManager* Xinput = nullptr;
+	ImguiManager* imgui = nullptr;
 
 	// ゲームウィンドウ作成
 	win->WindowCreate();
@@ -51,9 +53,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// ゲームシーン初期化
 	gameScene->Init(dxCommon.get(), input.get(), audio.get());
 
+	imgui = new ImguiManager(win->GetHwnd(), dxCommon->GetDev(), dxCommon->GetCmdList());
+
 	// メインループ
 	while (true)
 	{
+		// imgui描画前処理
+		ImGui_ImplDX12_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+
 		// メッセージ処理
 		if (win->Message()) { break; }
 
@@ -75,6 +84,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		//postEffect->Draw(dxCommon->GetCmdList());
 		// ゲームシーン描画
 		gameScene->Draw();
+		// imgui描画
+		imgui->cmdExecute();
 		// 描画終了
 		dxCommon->AfterDraw();
 
