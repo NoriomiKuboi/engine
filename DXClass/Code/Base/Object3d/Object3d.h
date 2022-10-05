@@ -49,7 +49,7 @@ public:
 
 	static void BeforeDraw(ID3D12GraphicsCommandList* cmdList); // 描画前処理
 	static void AfterDraw(); // 描画後処理
-	static Object3d* Create(Model* model = nullptr); // 3Dオブジェクト生成
+	static std::unique_ptr<Object3d> Create(Model* model = nullptr); // 3Dオブジェクト生成
 	static void SetLight(Light* light) { Object3d::light = light; } //ライトのセット
 
 private:

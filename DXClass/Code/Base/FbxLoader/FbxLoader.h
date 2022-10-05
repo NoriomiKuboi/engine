@@ -40,7 +40,7 @@ public:
 	/// </summary>
 	/// <param name="modelName"></param>
 	//void LoadModelFromFile(const string& modelName);
-	Model* LoadModelFromFile(const string& modelName);
+	std::unique_ptr<Model> LoadModelFromFile(const string& modelName);
 
 	/// <summary>
 	/// 再帰的にノード攻勢を解析

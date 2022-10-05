@@ -144,7 +144,7 @@ private:
 
 public:
 	static void StaticInit(ID3D12Device* dev); //初期化
-	static Model* CreateFromOBJ(const std::string& modelname, bool smoothing = false); // OBJファイルからメッシュ生成
+	static std::unique_ptr<Model> CreateFromOBJ(const std::string& modelname, bool smoothing = false); // OBJファイルからメッシュ生成
 
 public:
 	~Model();
