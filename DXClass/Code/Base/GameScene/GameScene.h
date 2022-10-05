@@ -56,13 +56,16 @@ private:
 
 	// 3dObj : FBX
 	static const int cubeNum = 9; // ècâ°cubeÇÃêî
-	Model* modelSample = nullptr;
-	Model* modelFbx = nullptr;
-	Object3d* objSample[cubeNum][cubeNum] = { nullptr };
-	Object3d* obj = nullptr;
-	ObjectFbx* objFbx = nullptr;
+	std::unique_ptr<Model> modelSampleCube;
+	std::unique_ptr<Model> modelSampleBullet;
+	std::unique_ptr<Model> modelFbx;
+	std::unique_ptr<Object3d> samplePlayer;
+	std::unique_ptr<Object3d> sampleBlock[cubeNum][cubeNum];
+	std::unique_ptr<Object3d> sampleBullet;
+	std::unique_ptr<ObjectFbx> objFbx;
 
-	XMFLOAT3 subPos;
+	XMFLOAT3 pPos;
+	XMFLOAT3 pBullPos;
 	const float g = 9.8f / 60.0f;
 	float vec;
 	bool trigger1;
@@ -75,6 +78,6 @@ private:
 
 	// ÉmÉCÉY
 	Noise* perlin = nullptr;
-	XMFLOAT3 pos;
+	XMFLOAT3 blockPos;
 	bool random;
 };

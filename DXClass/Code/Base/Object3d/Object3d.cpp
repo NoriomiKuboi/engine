@@ -216,10 +216,10 @@ void Object3d::AfterDraw()
 	Object3d::cmdList = nullptr;
 }
 
-Object3d* Object3d::Create(Model* model)
+std::unique_ptr<Object3d> Object3d::Create(Model* model)
 {
 	// 3Dオブジェクトのインスタンスを生成
-	Object3d* object3d = new Object3d();
+	std::unique_ptr<Object3d> object3d = std::make_unique<Object3d>();
 	if (object3d == nullptr)
 	{
 		return nullptr;
@@ -228,7 +228,6 @@ Object3d* Object3d::Create(Model* model)
 	// 初期化
 	if (!object3d->Init())
 	{
-		delete object3d;
 		assert(0);
 	}
 

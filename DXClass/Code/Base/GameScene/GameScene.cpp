@@ -9,8 +9,9 @@ using namespace DirectX;
 
 GameScene::GameScene()
 {
-	pos = { 0.0f,0.0f,0.0f };
-	subPos = { 0.0f,0.0f,-5.0f };
+	blockPos = { 0.0f,0.0f,0.0f };
+	pPos = { 0.0f,0.0f,-5.0f };
+	pBullPos = pPos;
 	random = true;
 	trigger1 = false;
 	trigger2 = false;
@@ -22,19 +23,8 @@ GameScene::~GameScene()
 {
 	safe_delete(sprite1);
 	safe_delete(particleMan);
-	safe_delete(modelSample);
-	safe_delete(modelFbx);
 	safe_delete(light);
-	safe_delete(objFbx);
 	safe_delete(perlin);
-	for (int j = 0;j < cubeNum;j++)
-	{
-		for (int i = 0;i < cubeNum;i++)
-		{
-			safe_delete(objSample[j][i]);
-		}
-	}
-	safe_delete(obj);
 }
 
 void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
@@ -81,18 +71,24 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	particleMan = ParticleManager::Create(dxCommon->GetDev(), camera);
 
 	// モデル読み込み
-	modelSample = Model::CreateFromOBJ("cubeSample");
+	modelSampleCube = std::make_unique<Model>();
+	modelSampleCube = Model::CreateFromOBJ("cubeSample");
+	modelSampleBullet = std::make_unique<Model>();
+	modelSampleBullet = Model::CreateFromOBJ("bulletSample");
 
 	// 3Dオブジェクト生成
 	for (int j = 0;j < cubeNum;j++)
 	{
 		for (int i = 0;i < cubeNum;i++)
 		{
-			objSample[j][i] = Object3d::Create(modelSample);
+			sampleBlock[j][i] = std::make_unique<Object3d>();
+			sampleBlock[j][i] = Object3d::Create(modelSampleCube.get());
 		}
 	}
-
-	obj = Object3d::Create(modelSample);
+	samplePlayer = std::make_unique<Object3d>();
+	samplePlayer = Object3d::Create(modelSampleCube.get());
+	sampleBullet = std::make_unique<Object3d>();
+	sampleBullet = Object3d::Create(modelSampleBullet.get());
 
 	// カメラ注視点をセット
 	//camera->SetTarget({ 25.0f, 25.0f, 0 });
@@ -109,6 +105,7 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 
 	// モデル名を指定してファイル読み込み
 	//FbxLoader::GetInstance()->LoadModelFromFile("cube");
+	modelFbx = std::make_unique<Model>();
 	modelFbx = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 
 	// デバイスをセット
@@ -119,18 +116,17 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	ObjectFbx::CreateGraphicsPipeline();
 
 	// FBX生成とモデルのセット
-	objFbx = new ObjectFbx;
+	objFbx = std::make_unique<ObjectFbx>();
 	objFbx->Init();
-	objFbx->SetModel(modelFbx);
+	objFbx->SetModel(modelFbx.get());
 
 	perlin = new Noise;
 	perlin->CreateRandom(0);
-
 }
 
 void GameScene::Update()
 {
-	ImGui::Begin("buri");
+	ImGui::Begin("test");
 	ImGui::SetWindowSize(ImVec2(200, 300), ImGuiCond_::ImGuiCond_FirstUseEver);
 	ImGui::End();
 
@@ -165,12 +161,12 @@ void GameScene::Update()
 	{
 		for (int y = 0; y < cubeNum; y++)
 		{
-			pos.x = float(x) * 1.5f;
-			pos.y = float(y) * 1.5f;
-			pos.z = perlin->Perlin(pos.x, pos.y);
-			objSample[x][y]->SetScale({ 0.5f,0.5f,0.5f });
-			objSample[x][y]->SetColor({ 0,0.4f,0,1 });
-			objSample[x][y]->SetPosition(pos);
+			blockPos.x = float(x) * 1.5f;
+			blockPos.y = float(y) * 1.5f;
+			blockPos.z = perlin->Perlin(blockPos.x, blockPos.y);
+			sampleBlock[x][y]->SetScale({ 0.5f,0.5f,0.5f });
+			sampleBlock[x][y]->SetColor({ 0,0.4f,0,1 });
+			sampleBlock[x][y]->SetPosition(blockPos);
 		}
 	}
 
@@ -186,8 +182,8 @@ void GameScene::Update()
 	{
 		float padRot = Xinput->GetPadLStickAngle();
 		float angle = XMConvertToRadians(padRot);
-		subPos.x += 0.3f * cosf(angle);
-		subPos.y += 0.3f * sinf(angle);
+		pPos.x += 0.3f * cosf(angle);
+		pPos.y += 0.3f * sinf(angle);
 	}
 
 	/*if (random == true)
@@ -212,11 +208,11 @@ void GameScene::Update()
 	{
 		for (int y = 0;y < cubeNum;y++)
 		{
-			objSample[x][y]->Update();
+			sampleBlock[x][y]->Update();
 		}
 	}
 
-	if (input->TriggerKey(DIK_SPACE))
+	if (Xinput->TriggerButton(XInputManager::PUD_BUTTON::PAD_RT))
 	{
 		trigger1 = true;
 	}
@@ -224,31 +220,25 @@ void GameScene::Update()
 	if (trigger1 == true)
 	{
 		vec += g;
-		subPos.z += vec;
+		pBullPos.z += vec;
 	}
 
-	if (subPos.z > 20.0f)
+	if (pBullPos.z > 20.0f)
 	{
-		subPos.z = -5.0f;
+		pBullPos.z = -5.0f;
 		vec = 0.0f;
 		trigger1 = false;
 		trigger2 = false;
 	}
 
-	if (subPos.z > 0.5f)
-	{
-		obj->SetScale({ 0.1f,0.1f,0.1f });
-	}
+	samplePlayer->SetPosition(pPos);
+	samplePlayer->SetColor({ 0.0f,0.0f,0.0f,1.0f });
+	samplePlayer->SetScale({ 0.5f,0.5f,0.5f });
+	samplePlayer->Update();
 
-	else
-	{
-		obj->SetScale({ 0.5f,0.5f,0.5f });
-	}
-
-	obj->SetPosition(subPos);
-
-	obj->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-	obj->Update();
+	sampleBullet->SetScale({ 0.5f,0.5f,0.5f });
+	sampleBullet->SetPosition(pBullPos);
+	sampleBullet->Update();
 
 	objFbx->Update();
 
@@ -281,11 +271,15 @@ void GameScene::Draw()
 	{
 		for (int i = 0;i < cubeNum;i++)
 		{
-			objSample[j][i]->Draw();
+			sampleBlock[j][i]->Draw();
 		}
 	}
 
-	obj->Draw();
+	samplePlayer->Draw();
+	if (trigger1 == true)
+	{
+		sampleBullet->Draw();
+	}
 
 	// 3Dオブジェクトの描画後処理
 	Object3d::AfterDraw();

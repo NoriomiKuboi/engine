@@ -138,10 +138,10 @@ void Model::StaticInit(ID3D12Device* device)
 	Mesh::StaticInit(device);
 }
 
-Model* Model::CreateFromOBJ(const std::string& modelname, bool smoothing)
+std::unique_ptr<Model> Model::CreateFromOBJ(const std::string& modelname, bool smoothing)
 {
 	// ÉÅÉÇÉäämï€
-	Model* instance = new Model;
+	std::unique_ptr<Model> instance = std::make_unique<Model>();
 	instance->Init(modelname, smoothing);
 
 	return instance;
