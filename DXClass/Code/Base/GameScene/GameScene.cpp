@@ -131,7 +131,7 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 void GameScene::Update()
 {
 	ImGui::Begin("buri");
-	ImGui::SetWindowSize(ImVec2(400, 500), ImGuiCond_::ImGuiCond_FirstUseEver);
+	ImGui::SetWindowSize(ImVec2(200, 300), ImGuiCond_::ImGuiCond_FirstUseEver);
 	ImGui::End();
 
 	XInputManager* Xinput = XInputManager::GetInstance();

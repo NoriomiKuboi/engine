@@ -1,88 +1,86 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="ソース ファイル">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="ヘッダー ファイル">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="シェーダーファイル">
       <UniqueIdentifier>{cc13278f-3765-41c9-bcb8-567734e7b914}</UniqueIdentifier>
     </Filter>
     <Filter Include="imgui">
       <UniqueIdentifier>{af60af58-27b1-4f36-a358-9a353a547e36}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{eb66299a-d949-44b8-8eae-79985c626d0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{a593dd5f-da22-4562-859e-0ef37e6a73d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Noise">
+      <UniqueIdentifier>{c90c3977-37d1-4fb2-8ab3-3243cde6f0bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Audio">
+      <UniqueIdentifier>{de37f14c-1ae0-4a24-88fb-4e642512aedb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Camera">
+      <UniqueIdentifier>{485d9e7e-d112-4543-8821-1b4e83794ea9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\DebugText">
+      <UniqueIdentifier>{e340aac0-230e-4f54-a71b-d79022ca8f43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\DirectXCommon">
+      <UniqueIdentifier>{2a244e86-1c70-4a3b-a2e8-e45d00feccf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\FbxLoader">
+      <UniqueIdentifier>{5254e049-78b0-49e0-b82f-85c9b2976cd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\GameScene">
+      <UniqueIdentifier>{08498210-d209-4065-aa0e-45919df2d966}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\ImguiManager">
+      <UniqueIdentifier>{1dc14374-e2ff-4b8f-8fbe-22d35732781f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Input">
+      <UniqueIdentifier>{df52ee22-d7a5-47bc-a096-48f864b6fa57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Light">
+      <UniqueIdentifier>{acf0b7e8-9497-496a-972b-9623e14be63a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Material">
+      <UniqueIdentifier>{86a84c33-42be-41fd-9020-d6d3a60048e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Mesh">
+      <UniqueIdentifier>{bc7d4aa7-6e79-420c-8ccb-f047f647d325}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Model">
+      <UniqueIdentifier>{6031c2ca-765a-426a-add2-ab02b1ba91de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Object3d">
+      <UniqueIdentifier>{679b1d76-5127-4e63-9636-5b1aa43013b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\ObjectFbx">
+      <UniqueIdentifier>{e477fed6-b18a-4725-83c6-fd551d93161d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\ParticleManager">
+      <UniqueIdentifier>{496e8861-3b60-4132-ae50-24281b78ada2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\PostEffect">
+      <UniqueIdentifier>{c3591344-8a08-4158-9f21-28aaf131e116}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\SafeDelete">
+      <UniqueIdentifier>{913439cc-be46-47cb-8def-1cc9da6e9004}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Sprite">
+      <UniqueIdentifier>{464402eb-0854-419a-9968-bb4bb7b033d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Vec">
+      <UniqueIdentifier>{6663a923-cae4-47bc-83bc-cf4ca609c9fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\WindowApp">
+      <UniqueIdentifier>{ba060779-97d6-4c6e-b3c8-20fb6cb3986a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\XInputManager">
+      <UniqueIdentifier>{efccef2b-fecd-4170-b26e-b1a9c4ae161b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Input.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXCommon.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Sprite.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugText.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Object3d.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="ParticleManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="GameScene.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Light.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="WindowApp.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="CameraSub.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="FbxLoader.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectFbx.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="PostEffect.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Noise.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Vec2.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="XInputManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="imgui\imgui.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
@@ -107,77 +105,77 @@
     <ClCompile Include="imgui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="ImguiManager.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Code\Base\main.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Game\Noise\Noise.cpp">
+      <Filter>Game\Noise</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\Audio\Audio.cpp">
+      <Filter>Base\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\Camera\Camera.cpp">
+      <Filter>Base\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\Camera\CameraSub.cpp">
+      <Filter>Base\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\DebugText\DebugText.cpp">
+      <Filter>Base\DebugText</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\DirectXCommon\DirectXCommon.cpp">
+      <Filter>Base\DirectXCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\FbxLoader\FbxLoader.cpp">
+      <Filter>Base\FbxLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\GameScene\GameScene.cpp">
+      <Filter>Base\GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\ImguiManager\ImguiManager.cpp">
+      <Filter>Base\ImguiManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\Input\Input.cpp">
+      <Filter>Base\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\Light\Light.cpp">
+      <Filter>Base\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\Material\Material.cpp">
+      <Filter>Base\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\Mesh\Mesh.cpp">
+      <Filter>Base\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\Model\Model.cpp">
+      <Filter>Base\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\Object3d\Object3d.cpp">
+      <Filter>Base\Object3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\ObjectFbx\ObjectFbx.cpp">
+      <Filter>Base\ObjectFbx</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\ParticleManager\ParticleManager.cpp">
+      <Filter>Base\ParticleManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\PostEffect\PostEffect.cpp">
+      <Filter>Base\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\Sprite\Sprite.cpp">
+      <Filter>Base\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\Vec\Vec2.cpp">
+      <Filter>Base\Vec</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\WindowApp\WindowApp.cpp">
+      <Filter>Base\WindowApp</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\XInputManager\XInputManager.cpp">
+      <Filter>Base\XInputManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Input.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXCommon.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="SafeDelete.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Sprite.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugText.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Object3d.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticleManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="GameScene.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Light.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowApp.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="CameraSub.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="FbxLoader.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectFbx.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="PostEffect.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Noise.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Vec2.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="XInputManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="imgui\imconfig.h">
       <Filter>imgui</Filter>
     </ClInclude>
@@ -205,8 +203,74 @@
     <ClInclude Include="imgui\imstb_truetype.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="ImguiManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Code\Game\Noise\Noise.h">
+      <Filter>Game\Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\Audio\Audio.h">
+      <Filter>Base\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\Camera\CameraSub.h">
+      <Filter>Base\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\Camera\Camera.h">
+      <Filter>Base\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\DebugText\DebugText.h">
+      <Filter>Base\DebugText</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\DirectXCommon\DirectXCommon.h">
+      <Filter>Base\DirectXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\FbxLoader\FbxLoader.h">
+      <Filter>Base\FbxLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\GameScene\GameScene.h">
+      <Filter>Base\GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\ImguiManager\ImguiManager.h">
+      <Filter>Base\ImguiManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\Input\Input.h">
+      <Filter>Base\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\Light\Light.h">
+      <Filter>Base\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\Material\Material.h">
+      <Filter>Base\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\Mesh\Mesh.h">
+      <Filter>Base\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\Model\Model.h">
+      <Filter>Base\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\Object3d\Object3d.h">
+      <Filter>Base\Object3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\ObjectFbx\ObjectFbx.h">
+      <Filter>Base\ObjectFbx</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\ParticleManager\ParticleManager.h">
+      <Filter>Base\ParticleManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\PostEffect\PostEffect.h">
+      <Filter>Base\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\SafeDelete\SafeDelete.h">
+      <Filter>Base\SafeDelete</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\Sprite\Sprite.h">
+      <Filter>Base\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\Vec\Vec2.h">
+      <Filter>Base\Vec</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\WindowApp\WindowApp.h">
+      <Filter>Base\WindowApp</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\XInputManager\XInputManager.h">
+      <Filter>Base\XInputManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

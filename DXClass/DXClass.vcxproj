@@ -59,7 +59,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Code\Game\Noise;$(SolutionDir)Code\Base\XInputManager;$(SolutionDir)Code\Base\WindowApp;$(SolutionDir)Code\Base\Vec;$(SolutionDir)Code\Base\SafeDelete;$(SolutionDir)Code\Base\Sprite;$(SolutionDir)Code\Base\PostEffect;$(SolutionDir)Code\Base\ParticleManager;$(SolutionDir)Code\Base\ObjectFbx;$(SolutionDir)Code\Base\Object3d;$(SolutionDir)Code\Base\Model;$(SolutionDir)Code\Base\Mesh;$(SolutionDir)Code\Base\Material;$(SolutionDir)Code\Base\Light;$(SolutionDir)Code\Base\Input;$(SolutionDir)Code\Base\ImguiManager;$(SolutionDir)Code\Base\GameScene;$(SolutionDir)Code\Base\FbxLoader;$(SolutionDir)Code\Base\DirectXCommon;$(SolutionDir)Code\Base\DebugText;$(SolutionDir)Code\Base\Camera;$(SolutionDir)Code\Base\Audio;$(SolutionDir)Code\Game;$(SolutionDir)Code\Base;$(SolutionDir)DirectXTex;$(SolutionDir)imgui</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
     </ClCompile>
@@ -77,7 +77,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Code\Game\Noise;$(SolutionDir)Code\Base\XInputManager;$(SolutionDir)Code\Base\WindowApp;$(SolutionDir)Code\Base\Vec;$(SolutionDir)Code\Base\SafeDelete;$(SolutionDir)Code\Base\Sprite;$(SolutionDir)Code\Base\PostEffect;$(SolutionDir)Code\Base\ParticleManager;$(SolutionDir)Code\Base\ObjectFbx;$(SolutionDir)Code\Base\Object3d;$(SolutionDir)Code\Base\Model;$(SolutionDir)Code\Base\Mesh;$(SolutionDir)Code\Base\Material;$(SolutionDir)Code\Base\Light;$(SolutionDir)Code\Base\Input;$(SolutionDir)Code\Base\ImguiManager;$(SolutionDir)Code\Base\GameScene;$(SolutionDir)Code\Base\FbxLoader;$(SolutionDir)Code\Base\DirectXCommon;$(SolutionDir)Code\Base\DebugText;$(SolutionDir)Code\Base\Camera;$(SolutionDir)Code\Base\Audio;$(SolutionDir)Code\Game;$(SolutionDir)Code\Base;$(SolutionDir)DirectXTex;$(SolutionDir)imgui</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -89,14 +89,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Audio.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="CameraSub.cpp" />
-    <ClCompile Include="DebugText.cpp" />
-    <ClCompile Include="DirectXCommon.cpp" />
-    <ClCompile Include="FbxLoader.cpp" />
-    <ClCompile Include="GameScene.cpp" />
-    <ClCompile Include="ImguiManager.cpp" />
+    <ClCompile Include="Code\Base\Audio\Audio.cpp" />
+    <ClCompile Include="Code\Base\Camera\Camera.cpp" />
+    <ClCompile Include="Code\Base\Camera\CameraSub.cpp" />
+    <ClCompile Include="Code\Base\DebugText\DebugText.cpp" />
+    <ClCompile Include="Code\Base\DirectXCommon\DirectXCommon.cpp" />
+    <ClCompile Include="Code\Base\FbxLoader\FbxLoader.cpp" />
+    <ClCompile Include="Code\Base\GameScene\GameScene.cpp" />
+    <ClCompile Include="Code\Base\ImguiManager\ImguiManager.cpp" />
+    <ClCompile Include="Code\Base\Input\Input.cpp" />
+    <ClCompile Include="Code\Base\Light\Light.cpp" />
+    <ClCompile Include="Code\Base\main.cpp" />
+    <ClCompile Include="Code\Base\Material\Material.cpp" />
+    <ClCompile Include="Code\Base\Mesh\Mesh.cpp" />
+    <ClCompile Include="Code\Base\Model\Model.cpp" />
+    <ClCompile Include="Code\Base\Object3d\Object3d.cpp" />
+    <ClCompile Include="Code\Base\ObjectFbx\ObjectFbx.cpp" />
+    <ClCompile Include="Code\Base\ParticleManager\ParticleManager.cpp" />
+    <ClCompile Include="Code\Base\PostEffect\PostEffect.cpp" />
+    <ClCompile Include="Code\Base\Sprite\Sprite.cpp" />
+    <ClCompile Include="Code\Base\Vec\Vec2.cpp" />
+    <ClCompile Include="Code\Base\WindowApp\WindowApp.cpp" />
+    <ClCompile Include="Code\Base\XInputManager\XInputManager.cpp" />
+    <ClCompile Include="Code\Game\Noise\Noise.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
@@ -105,21 +120,6 @@
     <ClCompile Include="imgui\imgui_stdlib.cpp" />
     <ClCompile Include="imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
-    <ClCompile Include="Input.cpp" />
-    <ClCompile Include="Light.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Material.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="Model.cpp" />
-    <ClCompile Include="Noise.cpp" />
-    <ClCompile Include="Object3d.cpp" />
-    <ClCompile Include="ObjectFbx.cpp" />
-    <ClCompile Include="ParticleManager.cpp" />
-    <ClCompile Include="PostEffect.cpp" />
-    <ClCompile Include="Sprite.cpp" />
-    <ClCompile Include="Vec2.cpp" />
-    <ClCompile Include="WindowApp.cpp" />
-    <ClCompile Include="XInputManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="DirectXTex\DirectXTex_Desktop_2019_Win10.vcxproj">
@@ -127,14 +127,29 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Audio.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="CameraSub.h" />
-    <ClInclude Include="DebugText.h" />
-    <ClInclude Include="DirectXCommon.h" />
-    <ClInclude Include="FbxLoader.h" />
-    <ClInclude Include="GameScene.h" />
-    <ClInclude Include="ImguiManager.h" />
+    <ClInclude Include="Code\Base\Audio\Audio.h" />
+    <ClInclude Include="Code\Base\Camera\Camera.h" />
+    <ClInclude Include="Code\Base\Camera\CameraSub.h" />
+    <ClInclude Include="Code\Base\DebugText\DebugText.h" />
+    <ClInclude Include="Code\Base\DirectXCommon\DirectXCommon.h" />
+    <ClInclude Include="Code\Base\FbxLoader\FbxLoader.h" />
+    <ClInclude Include="Code\Base\GameScene\GameScene.h" />
+    <ClInclude Include="Code\Base\ImguiManager\ImguiManager.h" />
+    <ClInclude Include="Code\Base\Input\Input.h" />
+    <ClInclude Include="Code\Base\Light\Light.h" />
+    <ClInclude Include="Code\Base\Material\Material.h" />
+    <ClInclude Include="Code\Base\Mesh\Mesh.h" />
+    <ClInclude Include="Code\Base\Model\Model.h" />
+    <ClInclude Include="Code\Base\Object3d\Object3d.h" />
+    <ClInclude Include="Code\Base\ObjectFbx\ObjectFbx.h" />
+    <ClInclude Include="Code\Base\ParticleManager\ParticleManager.h" />
+    <ClInclude Include="Code\Base\PostEffect\PostEffect.h" />
+    <ClInclude Include="Code\Base\SafeDelete\SafeDelete.h" />
+    <ClInclude Include="Code\Base\Sprite\Sprite.h" />
+    <ClInclude Include="Code\Base\Vec\Vec2.h" />
+    <ClInclude Include="Code\Base\WindowApp\WindowApp.h" />
+    <ClInclude Include="Code\Base\XInputManager\XInputManager.h" />
+    <ClInclude Include="Code\Game\Noise\Noise.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imgui_impl_dx12.h" />
@@ -144,21 +159,6 @@
     <ClInclude Include="imgui\imstb_rectpack.h" />
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
-    <ClInclude Include="Input.h" />
-    <ClInclude Include="Light.h" />
-    <ClInclude Include="Material.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="Noise.h" />
-    <ClInclude Include="Object3d.h" />
-    <ClInclude Include="ObjectFbx.h" />
-    <ClInclude Include="ParticleManager.h" />
-    <ClInclude Include="PostEffect.h" />
-    <ClInclude Include="SafeDelete.h" />
-    <ClInclude Include="Sprite.h" />
-    <ClInclude Include="Vec2.h" />
-    <ClInclude Include="WindowApp.h" />
-    <ClInclude Include="XInputManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\FBX.hlsli" />
