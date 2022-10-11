@@ -215,6 +215,7 @@ void GameScene::Update()
 	if (Xinput->TriggerButton(XInputManager::PUD_BUTTON::PAD_RT))
 	{
 		trigger1 = true;
+		pBullPos = pPos;
 	}
 
 	if (trigger1 == true)
