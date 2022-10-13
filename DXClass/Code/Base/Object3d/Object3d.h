@@ -10,6 +10,11 @@
 #include "Model.h"
 #include "Camera.h"
 #include "Light.h"
+#include "CollisionInfo.h"
+#include "BaseCollider.h"
+#include "CollisionManager.h"
+
+class BaseCollider;
 
 class Object3d
 {
@@ -60,11 +65,13 @@ private:
 	static Light* light;
 
 public:
-	bool Init(); //初期化
-	void Update(); // 更新
-	void Draw(); // 描画
+	Object3d() = default; // コンストラクタ
+	virtual ~Object3d(); // デストラクタ
+	virtual bool Init(); //初期化
+	virtual void Update(); // 更新
+	virtual void Draw(); // 描画
 	const XMFLOAT3& GetPosition() { return position; } // 座標の取得
-	const XMFLOAT3& GetRotation() { return rotation; } //回転角の取得
+	const XMFLOAT3& GetRotation() { return rotation; } // 回転角の取得
 	const XMFLOAT4& GetColor() { return color; } // 色の取得
 	void SetPosition(XMFLOAT3 position) { this->position = position; } // 座標の設定
 	void SetRotation(XMFLOAT3 rotation) { this->rotation = rotation; } // 回転角の設定
@@ -72,6 +79,9 @@ public:
 	void SetScale(XMFLOAT3 scale) { this->scale = scale; } // スケールの設定
 	void SetModel(Model* model) { this->model = model; } // モデルのセット
 	void SetBillboard(bool isBillboard) { this->isBillboard = isBillboard; } // ビルボードフラグのセット
+	const XMMATRIX& GetMatWorld() { return matWorld; } // ワールド行列の取得
+	void SetCollider(BaseCollider* collider); // コライダーのセット
+	virtual void OnCollision(const CollisionInfo& info) {} // 衝突時コールバック関数
 
 private:
 	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
@@ -83,5 +93,9 @@ private:
 	Object3d* parent = nullptr; // 親オブジェクト
 	Model* model = nullptr; // モデル
 	bool isBillboard = false; // ビルボード
+
+protected:
+	const char* name = nullptr; //クラス名(デバック用)
+	BaseCollider* collider = nullptr; // コライダー
 };
 

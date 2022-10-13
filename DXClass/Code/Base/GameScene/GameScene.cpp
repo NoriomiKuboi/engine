@@ -16,7 +16,6 @@ GameScene::GameScene()
 	trigger1 = false;
 	trigger2 = false;
 	vec = 0.0f;
-	degree = 0.0f;
 }
 
 GameScene::~GameScene()
@@ -165,7 +164,7 @@ void GameScene::Update()
 			blockPos.y = float(y) * 1.5f;
 			blockPos.z = perlin->Perlin(blockPos.x, blockPos.y);
 			sampleBlock[x][y]->SetScale({ 0.5f,0.5f,0.5f });
-			sampleBlock[x][y]->SetColor({ 0,0.4f,0,1 });
+			//sampleBlock[x][y]->SetColor({ 0,0.4f,0,1 });
 			sampleBlock[x][y]->SetPosition(blockPos);
 		}
 	}
@@ -186,6 +185,26 @@ void GameScene::Update()
 		pPos.y += 0.3f * sinf(angle);
 	}
 
+	else if (input->PushKey(DIK_W))
+	{
+		pPos.y += 0.5f;
+	}
+
+	else if (input->PushKey(DIK_S))
+	{
+		pPos.y -= 0.5f;
+	}
+
+	else if (input->PushKey(DIK_A))
+	{
+		pPos.x -= 0.5f;
+	}
+
+	else if (input->PushKey(DIK_D))
+	{
+		pPos.x += 0.5f;
+	}
+
 	/*if (random == true)
 	{
 		for (int x = 0;x < cubeNum;x++)
@@ -204,6 +223,7 @@ void GameScene::Update()
 		random = false;
 	}*/
 
+
 	for (int x = 0;x < cubeNum;x++)
 	{
 		for (int y = 0;y < cubeNum;y++)
@@ -212,7 +232,7 @@ void GameScene::Update()
 		}
 	}
 
-	if (Xinput->TriggerButton(XInputManager::PUD_BUTTON::PAD_RT))
+	if (Xinput->TriggerButton(XInputManager::PUD_BUTTON::PAD_RT) || input->TriggerKey(DIK_SPACE))
 	{
 		trigger1 = true;
 		pBullPos = pPos;
@@ -230,6 +250,28 @@ void GameScene::Update()
 		vec = 0.0f;
 		trigger1 = false;
 		trigger2 = false;
+	}
+
+	Sphere pBullet;
+	pBullet.center = { samplePlayer->GetPosition().x,samplePlayer->GetPosition().y,samplePlayer->GetPosition().z,1 };
+	pBullet.radius = 1;
+	Box block;
+	block.center = { sampleBullet->GetPosition().x,sampleBullet->GetPosition().y,sampleBullet->GetPosition().z,1 };
+
+	for (int x = 0;x < cubeNum;x++)
+	{
+		for (int y = 0;y < cubeNum;y++)
+		{
+			if (!Collision::CheckSphere2Box(pBullet, block))
+			{
+				sampleBlock[x][y]->SetColor({ 1,0,0,1 });
+			}
+
+			else
+			{
+				sampleBlock[x][y]->SetColor({ 0,0.4f,0,1 });
+			}
+		}
 	}
 
 	samplePlayer->SetPosition(pPos);

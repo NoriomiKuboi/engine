@@ -16,6 +16,9 @@
 #include "PostEffect.h"
 #include "XInputManager.h"
 #include "ImguiManager.h"
+#include "CollisionPrimitive.h"
+#include "CollisionManager.h"
+#include "Collision.h"
 
 class GameScene
 {
@@ -70,8 +73,6 @@ private:
 	float vec;
 	bool trigger1;
 	bool trigger2;
-
-	float degree;
 
 	// ƒ‰ƒCƒg
 	Light* light = nullptr;
