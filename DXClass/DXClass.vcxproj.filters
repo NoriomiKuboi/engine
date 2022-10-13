@@ -79,6 +79,9 @@
     <Filter Include="Base\XInputManager">
       <UniqueIdentifier>{efccef2b-fecd-4170-b26e-b1a9c4ae161b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Base\Collision">
+      <UniqueIdentifier>{ab093699-f964-4039-91d2-7b54e0387ff2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -174,10 +177,18 @@
     <ClCompile Include="Code\Base\XInputManager\XInputManager.cpp">
       <Filter>Base\XInputManager</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionPrimitive.cpp" />
-    <ClCompile Include="Collision.cpp" />
-    <ClCompile Include="SphereCollider.cpp" />
-    <ClCompile Include="CollisionManager.cpp" />
+    <ClCompile Include="Code\Base\Collision\Collision.cpp">
+      <Filter>Base\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\Collision\CollisionManager.cpp">
+      <Filter>Base\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\Collision\CollisionPrimitive.cpp">
+      <Filter>Base\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Base\Collision\SphereCollider.cpp">
+      <Filter>Base\Collision</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -276,12 +287,24 @@
     <ClInclude Include="Code\Base\XInputManager\XInputManager.h">
       <Filter>Base\XInputManager</Filter>
     </ClInclude>
-    <ClInclude Include="CollisionPrimitive.h" />
-    <ClInclude Include="Collision.h" />
-    <ClInclude Include="BaseCollider.h" />
-    <ClInclude Include="CollisionInfo.h" />
-    <ClInclude Include="SphereCollider.h" />
-    <ClInclude Include="CollisionManager.h" />
+    <ClInclude Include="Code\Base\Collision\BaseCollider.h">
+      <Filter>Base\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\Collision\Collision.h">
+      <Filter>Base\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\Collision\CollisionInfo.h">
+      <Filter>Base\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\Collision\CollisionManager.h">
+      <Filter>Base\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\Collision\CollisionPrimitive.h">
+      <Filter>Base\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Base\Collision\SphereCollider.h">
+      <Filter>Base\Collision</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\SpritePS.hlsl">
