@@ -81,4 +81,6 @@ private:
 	Noise* perlin = nullptr;
 	XMFLOAT3 blockPos;
 	bool random;
+
+	int test;
 };
