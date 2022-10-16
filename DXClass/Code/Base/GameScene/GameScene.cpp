@@ -252,17 +252,17 @@ void GameScene::Update()
 		trigger2 = false;
 	}
 
-	Sphere pBullet;
-	pBullet.center = { samplePlayer->GetPosition().x,samplePlayer->GetPosition().y,samplePlayer->GetPosition().z,1 };
-	pBullet.radius = 1;
-	Box block;
-	block.center = { sampleBullet->GetPosition().x,sampleBullet->GetPosition().y,sampleBullet->GetPosition().z,1 };
-
 	for (int x = 0;x < cubeNum;x++)
 	{
 		for (int y = 0;y < cubeNum;y++)
 		{
-			if (!Collision::CheckSphere2Box(pBullet, block))
+			Sphere pBullet;
+			pBullet.center = { sampleBlock[x][y]->GetPosition().x,sampleBlock[x][y]->GetPosition().y,sampleBlock[x][y]->GetPosition().z,1 };
+			pBullet.radius = 1;
+			Box block;
+			block.center = { sampleBullet->GetPosition().x,sampleBullet->GetPosition().y,sampleBullet->GetPosition().z,1 };
+
+			if (Collision::CheckSphere2Box(pBullet, block))
 			{
 				sampleBlock[x][y]->SetColor({ 1,0,0,1 });
 			}
