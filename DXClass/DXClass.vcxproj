@@ -116,6 +116,7 @@
     <ClCompile Include="Code\Base\WindowApp\WindowApp.cpp" />
     <ClCompile Include="Code\Base\XInputManager\XInputManager.cpp" />
     <ClCompile Include="Code\Game\Noise\Noise.cpp" />
+    <ClCompile Include="Easing.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="Code\Base\WindowApp\WindowApp.h" />
     <ClInclude Include="Code\Base\XInputManager\XInputManager.h" />
     <ClInclude Include="Code\Game\Noise\Noise.h" />
+    <ClInclude Include="Easing.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imgui_impl_dx12.h" />
