@@ -21,33 +21,45 @@ void CameraSub::Update()
 
 	// マウスの入力を取得
 	Input::MouseMove mouseMove = input->GetMouseMove();
-	XInputManager* Xinput = XInputManager::GetInstance();
 
-	// マウスの左ボタンが押されていたらカメラを回転
-	//if (input->PushMouseLeft())
+	// ゲームパッドの入力を取得
+	XInputManager* Xinput = XInputManager::GetInstance();
+	float RSticlRot = Xinput->GetPadRStickAngle() - 90;
+	float LSticlRot = Xinput->GetPadLStickAngle();
+	float rotR = XMConvertToRadians(RSticlRot);
+	float rotL = XMConvertToRadians(LSticlRot);
+
+	// 右スティックでカメラを回転
+	//if (Xinput->RightStickX(true) || Xinput->RightStickX(false) || Xinput->RightStickY(true) || Xinput->RightStickY(false))
 	//{
-	//	float dy = mouseMove.lX * scaleY;
-	//	float dx = mouseMove.lY * scaleX;
+	//	//input->PushMouseLeft()
+	//	//float dy = mouseMove.lY * scaleY;
+	//	//float dx = mouseMove.lX * scaleX;
+	//	float dy = sinf(rotL) * scaleY;
+	//	float dx = cosf(rotR) * scaleX;
 	//
 	//	angleX = -dx * XM_PI;
 	//	angleY = -dy * XM_PI;
 	//	dirty = true;
 	//}
-	//
-	//// マウスの中ボタンが押されていたらカメラを並行移動
-	//if (input->PushMouseMiddle())
-	//{
-	//	float dx = mouseMove.lX / 100.0f;
-	//	float dy = mouseMove.lY / 100.0f;
-	//
-	//	XMVECTOR move = { -dx, +dy, 0, 0 };
-	//	move = XMVector3Transform(move, matRot);
-	//
-	//	MoveVector(move);
-	//	dirty = true;
-	//}
-	//
-	//// ホイールで距離を変更
+
+	// 左スティックでカメラを移動
+	if (Xinput->LeftStickX(true) || Xinput->LeftStickX(false) || Xinput->LeftStickY(true) || Xinput->LeftStickY(false))
+	{
+		//input->PushMouseMiddle()
+		//float dx = mouseMove.lX / 100.0f;
+		//float dy = mouseMove.lY / 100.0f;
+		float dx = cosf(rotL) * 0.3f;
+		float dy = sinf(rotL) * 0.3f;
+	
+		XMVECTOR move = { dx, dy, 0, 0 };
+		move = XMVector3Transform(move, matRot);
+	
+		MoveVector(move);
+		dirty = true;
+	}
+	
+	// ホイールで距離を変更
 	//if (mouseMove.lZ != 0)
 	//{
 	//	distance -= mouseMove.lZ / 100.0f;
