@@ -47,6 +47,7 @@ GameScene::~GameScene()
 	safe_delete(particleMan);
 	safe_delete(light);
 	safe_delete(perlin);
+	safe_delete(operation);
 }
 
 void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
@@ -165,6 +166,12 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 		return;
 	}
 
+	if (!Sprite::LoadTexture(15, L"Resources/operation.png"))
+	{
+		assert(0);
+		return;
+	}
+
 	// 背景スプライト生成
 	sprite1 = Sprite::Create(1, { 0.0f,0.0f });
 	titleBack = Sprite::Create(2, { 0.0f,0.0f });
@@ -184,6 +191,7 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	num7 = Sprite::Create(12, { 0.0f,0.0f });
 	num8 = Sprite::Create(13, { 0.0f,0.0f });
 	num9 = Sprite::Create(14, { 0.0f,0.0f });
+	operation = Sprite::Create(15, { 0.0f,0.0f });
 
 	// パーティクルマネージャ生成
 	particleMan = ParticleManager::Create(dxCommon->GetDev(), camera);
@@ -288,7 +296,7 @@ void GameScene::Update()
 		secTen = 0;
 		count = 0;
 
-		if (Xinput->TriggerButton(XInputManager::PUD_BUTTON::PAD_A))
+		if (Xinput->TriggerButton(XInputManager::PUD_BUTTON::PAD_A) || input->TriggerKey(DIK_RETURN))
 		{
 			scene = game;
 		}
@@ -413,22 +421,22 @@ void GameScene::Update()
 
 		else if (input->PushKey(DIK_W))
 		{
-			pPos.y += 0.5f;
+			pPos.y += 0.3f;
 		}
 
 		else if (input->PushKey(DIK_S))
 		{
-			pPos.y -= 0.5f;
+			pPos.y -= 0.3f;
 		}
 
 		else if (input->PushKey(DIK_A))
 		{
-			pPos.x -= 0.5f;
+			pPos.x -= 0.3f;
 		}
 
 		else if (input->PushKey(DIK_D))
 		{
-			pPos.x += 0.5f;
+			pPos.x += 0.3f;
 		}
 
 		/*if (random == true)
@@ -513,11 +521,13 @@ void GameScene::Update()
 		objFbx->Update();
 
 		light->Update();
+
+		operation->SetPosition({ 50.0f,550.0f });
 	}
 
 	else if (scene == end)
 	{
-		if (Xinput->TriggerButton(XInputManager::PUD_BUTTON::PAD_A))
+		if (Xinput->TriggerButton(XInputManager::PUD_BUTTON::PAD_A) || input->TriggerKey(DIK_RETURN))
 		{
 			scene = title;
 		}
@@ -659,6 +669,8 @@ void GameScene::Draw()
 		{
 			num3Ten->Draw();
 		}
+
+		operation->Draw();
 
 		// デバッグテキストの描画
 		debugText.DrawAll(cmdList);

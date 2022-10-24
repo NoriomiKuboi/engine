@@ -77,6 +77,7 @@ private:
 	Sprite* num7 = nullptr;
 	Sprite* num8 = nullptr;
 	Sprite* num9 = nullptr;
+	Sprite* operation = nullptr;
 
 	// パーティクル
 	ParticleManager* particleMan = nullptr;

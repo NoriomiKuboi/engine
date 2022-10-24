@@ -58,6 +58,54 @@ void CameraSub::Update()
 		MoveVector(move);
 		dirty = true;
 	}
+
+	else if (input->PushKey(DIK_W))
+	{
+		float dx = 0.0f;
+		float dy = 0.3f;
+
+		XMVECTOR move = { dx, dy, 0, 0 };
+		move = XMVector3Transform(move, matRot);
+
+		MoveVector(move);
+		dirty = true;
+	}
+
+	else if (input->PushKey(DIK_S))
+	{
+		float dx = 0.0f;
+		float dy = -0.3f;
+
+		XMVECTOR move = { dx, dy, 0, 0 };
+		move = XMVector3Transform(move, matRot);
+
+		MoveVector(move);
+		dirty = true;
+	}
+
+	else if (input->PushKey(DIK_A))
+	{
+		float dx = -0.3f;
+		float dy = 0;
+
+		XMVECTOR move = { dx, dy, 0, 0 };
+		move = XMVector3Transform(move, matRot);
+
+		MoveVector(move);
+		dirty = true;
+	}
+
+	else if (input->PushKey(DIK_D))
+	{
+		float dx = 0.3f;
+		float dy = 0.0f;
+
+		XMVECTOR move = { dx, dy, 0, 0 };
+		move = XMVector3Transform(move, matRot);
+
+		MoveVector(move);
+		dirty = true;
+	}
 	
 	// ホイールで距離を変更
 	//if (mouseMove.lZ != 0)
