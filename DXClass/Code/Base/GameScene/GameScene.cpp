@@ -217,9 +217,6 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	sampleBullet = Object3d::Create(modelSampleBullet.get());
 
 	// カメラ注視点をセット
-	//camera->SetTarget({ 25.0f, 25.0f, 0 });
-	//camera->SetDistance(75.0f);
-
 	camera->SetTarget({ 6.0f, 6.0f, 0 });
 	camera->SetDistance(20.0f);
 
@@ -255,14 +252,14 @@ void GameScene::Update()
 	XInputManager* Xinput = XInputManager::GetInstance();
 	const XMFLOAT3& cameraPos = camera->GetEye();
 
-	//ImGui::Begin("Info");
-	//ImGui::SetWindowPos(ImVec2(20, 20), ImGuiCond_::ImGuiCond_FirstUseEver);
-	//ImGui::SetWindowSize(ImVec2(210, 110), ImGuiCond_::ImGuiCond_FirstUseEver);
-	//ImGui::Text("(%.1f FPS)", ImGui::GetIO().Framerate);
-	//ImGui::Text("LSticlRot %.1f", Xinput->GetPadLStickAngle());
-	//ImGui::Text("RSticlRot %.1f", Xinput->GetPadRStickAngle());
-	//ImGui::Text("cameraPos( %.1f, %.1f, %.1f )", cameraPos.x, cameraPos.y, cameraPos.z);
-	//ImGui::End();
+	ImGui::Begin("Info");
+	ImGui::SetWindowPos(ImVec2(20, 20), ImGuiCond_::ImGuiCond_FirstUseEver);
+	ImGui::SetWindowSize(ImVec2(210, 110), ImGuiCond_::ImGuiCond_FirstUseEver);
+	ImGui::Text("(%.1f FPS)", ImGui::GetIO().Framerate);
+	ImGui::Text("LSticlRot %.1f", Xinput->GetPadLStickAngle());
+	ImGui::Text("RSticlRot %.1f", Xinput->GetPadRStickAngle());
+	ImGui::Text("cameraPos( %.1f, %.1f, %.1f )", cameraPos.x, cameraPos.y, cameraPos.z);
+	ImGui::End();
 
 	// パーティクル生成
 	CreateParticles();
@@ -275,6 +272,7 @@ void GameScene::Update()
 
 	//ライトの色を設定
 	light->SetLightColor({ 1,1,1 });
+
 	//3Dオブジェクトにライトを設定
 	Object3d::SetLight(light);
 
@@ -439,25 +437,6 @@ void GameScene::Update()
 			pPos.x += 0.3f;
 		}
 
-		/*if (random == true)
-		{
-			for (int x = 0;x < cubeNum;x++)
-			{
-				for (int y = 0;y < cubeNum;y++)
-				{
-					pos.x = x * 10.0f;
-					pos.y = y * 10.0f;
-					pos.z = rand() % 60 - 30;
-					if (pos.z <= 0) { pos.z = 10000; }
-					objSample[x][y]->SetScale({ 5.0f,5.0f,5.0f });
-					objSample[x][y]->SetPosition(pos);
-				}
-			}
-
-			random = false;
-		}*/
-
-
 		for (int x = 0;x < cubeNum;x++)
 		{
 			for (int y = 0;y < cubeNum;y++)
@@ -590,8 +569,8 @@ void GameScene::Draw()
 
 		// 3Dオブジェクトの描画後処理
 		Object3d::AfterDraw();
-
 		//objFbx->Draw(cmdList);
+
 		// パーティクルの描画
 		//particleMan->Draw(cmdList);
 
@@ -693,51 +672,6 @@ void GameScene::Draw()
 		// 深度バッファクリア
 		dxCommon->ClearDepthBuffer();
 	}
-
-	//// 背景スプライト描画前処理
-	//Sprite::BeforeDraw(cmdList);
-	//
-	//// 背景スプライト描画
-	//
-	//// スプライト描画後処理
-	//Sprite::AfterDraw();
-	//
-	//// 深度バッファクリア
-	//dxCommon->ClearDepthBuffer();
-	//
-	//// 3Dオブジェクトの描画前処理
-	//Object3d::BeforeDraw(cmdList);
-	//
-	//// 3Dオブジェクト描画
-	//for (int j = 0;j < cubeNum;j++)
-	//{
-	//	for (int i = 0;i < cubeNum;i++)
-	//	{
-	//		sampleBlock[j][i]->Draw();
-	//	}
-	//}
-	//
-	//samplePlayer->Draw();
-	//if (trigger1 == true)
-	//{
-	//	sampleBullet->Draw();
-	//}
-	//
-	//// 3Dオブジェクトの描画後処理
-	//Object3d::AfterDraw();
-	//
-	////objFbx->Draw(cmdList);
-	//// パーティクルの描画
-	////particleMan->Draw(cmdList);
-	//
-	//// 前景スプライト描画前処理
-	//Sprite::BeforeDraw(cmdList);
-	//
-	//// デバッグテキストの描画
-	//debugText.DrawAll(cmdList);
-	//
-	//// スプライト描画後処理
-	//Sprite::AfterDraw();
 }
 
 void GameScene::CreateParticles()

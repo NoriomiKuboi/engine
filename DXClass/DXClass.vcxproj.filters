@@ -190,6 +190,7 @@
       <Filter>Base\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Easing.cpp" />
+    <ClCompile Include="Quaternion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -307,6 +308,7 @@
       <Filter>Base\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Easing.h" />
+    <ClInclude Include="Quaternion.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\SpritePS.hlsl">
