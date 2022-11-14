@@ -191,6 +191,7 @@
     </ClCompile>
     <ClCompile Include="Easing.cpp" />
     <ClCompile Include="Quaternion.cpp" />
+    <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -309,6 +310,7 @@
     </ClInclude>
     <ClInclude Include="Easing.h" />
     <ClInclude Include="Quaternion.h" />
+    <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\SpritePS.hlsl">

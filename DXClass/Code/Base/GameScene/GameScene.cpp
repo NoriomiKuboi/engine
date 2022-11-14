@@ -18,10 +18,10 @@ GameScene::GameScene()
 	vec = 0.0f;
 	scene = SceneName::title;
 
+	sec = 0;
 	time = 0;
-	secOne = 0;
-	secTen = 0;
 	count = 0;
+
 }
 
 GameScene::~GameScene()
@@ -30,24 +30,11 @@ GameScene::~GameScene()
 	safe_delete(titleBack);
 	safe_delete(gameBack);
 	safe_delete(endBack);
-	safe_delete(num0One);
-	safe_delete(num1One);
-	safe_delete(num2One);
-	safe_delete(num3One);
-	safe_delete(num0Ten);
-	safe_delete(num1Ten);
-	safe_delete(num2Ten);
-	safe_delete(num3Ten);
-	safe_delete(num4);
-	safe_delete(num5);
-	safe_delete(num6);
-	safe_delete(num7);
-	safe_delete(num8);
-	safe_delete(num9);
 	safe_delete(particleMan);
 	safe_delete(light);
 	safe_delete(perlin);
 	safe_delete(operation);
+	safe_delete(timer);
 }
 
 void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
@@ -105,68 +92,7 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 		return;
 	}
 
-
-	if (!Sprite::LoadTexture(5, L"Resources/0.png")) // num0
-	{
-		assert(0);
-		return;
-	}
-	
-	if (!Sprite::LoadTexture(6, L"Resources/1.png")) // num1
-	{
-		assert(0);
-		return;
-	}
-
-	if (!Sprite::LoadTexture(7, L"Resources/2.png")) // num2
-	{
-		assert(0);
-		return;
-	}
-
-	if (!Sprite::LoadTexture(8, L"Resources/3.png")) // num3
-	{
-		assert(0);
-		return;
-	}
-
-	if (!Sprite::LoadTexture(9, L"Resources/4.png")) // num4
-	{
-		assert(0);
-		return;
-	}
-
-	if (!Sprite::LoadTexture(10, L"Resources/5.png")) // num5
-	{
-		assert(0);
-		return;
-	}
-
-	if (!Sprite::LoadTexture(11, L"Resources/6.png")) // num6
-	{
-		assert(0);
-		return;
-	}
-
-	if (!Sprite::LoadTexture(12, L"Resources/7.png")) // num7
-	{
-		assert(0);
-		return;
-	}
-
-	if (!Sprite::LoadTexture(13, L"Resources/8.png")) // num8
-	{
-		assert(0);
-		return;
-	}
-
-	if (!Sprite::LoadTexture(14, L"Resources/9.png")) // num9
-	{
-		assert(0);
-		return;
-	}
-
-	if (!Sprite::LoadTexture(15, L"Resources/operation.png"))
+	if (!Sprite::LoadTexture(5, L"Resources/operation.png"))
 	{
 		assert(0);
 		return;
@@ -177,21 +103,7 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	titleBack = Sprite::Create(2, { 0.0f,0.0f });
 	gameBack = Sprite::Create(3, { 0.0f,0.0f });
 	endBack = Sprite::Create(4, { 0.0f,0.0f });
-	num0One = Sprite::Create(5, { 0.0f,0.0f });
-	num1One = Sprite::Create(6, { 0.0f,0.0f });
-	num2One = Sprite::Create(7, { 0.0f,0.0f });
-	num3One = Sprite::Create(8, { 0.0f,0.0f });
-	num0Ten = Sprite::Create(5, { 0.0f,0.0f });
-	num1Ten = Sprite::Create(6, { 0.0f,0.0f });
-	num2Ten = Sprite::Create(7, { 0.0f,0.0f });
-	num3Ten = Sprite::Create(8, { 0.0f,0.0f });
-	num4 = Sprite::Create(9, { 0.0f,0.0f });
-	num5 = Sprite::Create(10, { 0.0f,0.0f });
-	num6 = Sprite::Create(11, { 0.0f,0.0f });
-	num7 = Sprite::Create(12, { 0.0f,0.0f });
-	num8 = Sprite::Create(13, { 0.0f,0.0f });
-	num9 = Sprite::Create(14, { 0.0f,0.0f });
-	operation = Sprite::Create(15, { 0.0f,0.0f });
+	operation = Sprite::Create(5, { 0.0f,0.0f });
 
 	// パーティクルマネージャ生成
 	particleMan = ParticleManager::Create(dxCommon->GetDev(), camera);
@@ -245,6 +157,9 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 
 	perlin = new Noise;
 	perlin->CreateRandom(0);
+
+	timer = new Timer;
+	timer->Init();
 }
 
 void GameScene::Update()
@@ -278,21 +193,22 @@ void GameScene::Update()
 
 	if (scene == title)
 	{
-		camera->SetTarget({ 6.0f, 6.0f, 0 });
+		camera->SetTarget({ 6.5f, 6.5f, 0 });
 		camera->SetDistance(20.0f);
 
 		blockPos = { 0.0f,0.0f,0.0f };
-		pPos = { 6.0f,6.0f,-5.0f };
+		pPos = { 6.5f,6.5f,-5.0f };
 		pBullPos = pPos;
 		random = true;
 		trigger1 = false;
 		trigger2 = false;
 		vec = 0.0f;
 
+		sec = 0;
 		time = 0;
-		secOne = 0;
-		secTen = 0;
 		count = 0;
+
+		timer->Reset();
 
 		if (Xinput->TriggerButton(XInputManager::PUD_BUTTON::PAD_A) || input->TriggerKey(DIK_RETURN))
 		{
@@ -304,15 +220,12 @@ void GameScene::Update()
 	{
 		camera->Update();
 
-		const XMFLOAT2 onePos = { 1280.0f / 2.0f,70.0f };
-		const XMFLOAT2 tenPos = { 1280 / 2.0f - 48.0f,70.0f };
-
-		if (secTen < 3)
+		if (sec < 3)
 		{
 			time++;
 		}
 
-		if (secTen == 3)
+		if (sec == 3)
 		{
 			count++;
 		}
@@ -322,80 +235,7 @@ void GameScene::Update()
 			scene = SceneName::end;
 		}
 
-		secOne = time / 45 % 10;
-		secTen = time / (45 * 10) % 6;
-
-		//secOne
-		if (secOne == 0)
-		{
-			num0One->SetPosition(onePos);
-		}
-
-		if (secOne == 1)
-		{
-			num1One->SetPosition(onePos);
-		}
-
-		if (secOne == 2)
-		{
-			num2One->SetPosition(onePos);
-		}
-
-		if (secOne == 3)
-		{
-			num3One->SetPosition(onePos);
-		}
-
-		if (secOne == 4)
-		{
-			num4->SetPosition(onePos);
-		}
-
-		if (secOne == 5)
-		{
-			num5->SetPosition(onePos);
-		}
-
-		if (secOne == 6)
-		{
-			num6->SetPosition(onePos);
-		}
-
-		if (secOne == 7)
-		{
-			num7->SetPosition(onePos);
-		}
-
-		if (secOne == 8)
-		{
-			num8->SetPosition(onePos);
-		}
-
-		if (secOne == 9)
-		{
-			num9->SetPosition(onePos);
-		}
-
-		// secTen
-		if (secTen == 0)
-		{
-			num0Ten->SetPosition(tenPos);
-		}
-
-		if (secTen == 1)
-		{
-			num1Ten->SetPosition(tenPos);
-		}
-
-		if (secTen == 2)
-		{
-			num2Ten->SetPosition(tenPos);
-		}
-
-		if (secTen == 3)
-		{
-			num3Ten->SetPosition(tenPos);
-		}
+		sec = time / (45 * 10) % 6;
 
 		for (int x = 0; x < cubeNum; x++)
 		{
@@ -404,10 +244,12 @@ void GameScene::Update()
 				blockPos.x = float(x) * 1.5f;
 				blockPos.y = float(y) * 1.5f;
 				blockPos.z = perlin->Perlin(blockPos.x, blockPos.y);
-				sampleBlock[x][y]->SetScale({ 0.5f,0.5f,0.5f });
-				sampleBlock[x][y]->SetPosition(blockPos);
+				sampleBlock[x][y]->SetScale({ 0.8f,0.8f,0.8f });
+				//sampleBlock[x][y]->SetPosition(blockPos);
 			}
 		}
+
+		block();
 
 		if (Xinput->LeftStickX(true) || Xinput->LeftStickX(false) || Xinput->LeftStickY(true) || Xinput->LeftStickY(false))
 		{
@@ -501,6 +343,8 @@ void GameScene::Update()
 
 		light->Update();
 
+		timer->Update();
+
 		operation->SetPosition({ 50.0f,550.0f });
 	}
 
@@ -577,78 +421,8 @@ void GameScene::Draw()
 		// 前景スプライト描画前処理
 		Sprite::BeforeDraw(cmdList);
 
-		//secOne
-		if (secOne == 0)
-		{
-			num0One->Draw();
-		}
-
-		if (secOne == 1)
-		{
-			num1One->Draw();
-		}
-
-		if (secOne == 2)
-		{
-			num2One->Draw();
-		}
-
-		if (secOne == 3)
-		{
-			num3One->Draw();
-		}
-
-		if (secOne == 4)
-		{
-			num4->Draw();
-		}
-
-		if (secOne == 5)
-		{
-			num5->Draw();
-		}
-
-		if (secOne == 6)
-		{
-			num6->Draw();
-		}
-
-		if (secOne == 7)
-		{
-			num7->Draw();
-		}
-
-		if (secOne == 8)
-		{
-			num8->Draw();
-		}
-
-		if (secOne == 9)
-		{
-			num9->Draw();
-		}
-
-		// secTen
-		if (secTen == 0)
-		{
-			num0Ten->Draw();
-		}
-
-		if (secTen == 1)
-		{
-			num1Ten->Draw();
-		}
-
-		if (secTen == 2)
-		{
-			num2Ten->Draw();
-		}
-
-		if (secTen == 3)
-		{
-			num3Ten->Draw();
-		}
-
+		timer->Draw();
+		
 		operation->Draw();
 
 		// デバッグテキストの描画
@@ -704,4 +478,117 @@ void GameScene::CreateParticles()
 		// 追加
 		particleMan->Add(60, pos, vel, acc, 1.0f, 0.0f);
 	}
+}
+
+void GameScene::block()
+{
+	sampleBlock[0][0]->SetPosition({ 1.5f * 0,0,0 });
+	sampleBlock[0][1]->SetPosition({ 1.5f * 1,0,1 });
+	sampleBlock[0][2]->SetPosition({ 1.5f * 2,0,1 });
+	sampleBlock[0][3]->SetPosition({ 1.5f * 3,0,2 });
+	sampleBlock[0][4]->SetPosition({ 1.5f * 4,0,2 });
+	sampleBlock[0][5]->SetPosition({ 1.5f * 5,0,2 });
+	sampleBlock[0][6]->SetPosition({ 1.5f * 6,0,2 });
+	sampleBlock[0][7]->SetPosition({ 1.5f * 7,0,1 });
+	sampleBlock[0][8]->SetPosition({ 1.5f * 8,0,1 });
+	sampleBlock[0][9]->SetPosition({ 1.5f * 9,0,0 });
+
+	sampleBlock[1][0]->SetPosition({ 1.5f * 0,1.5f * 1,0 });
+	sampleBlock[1][1]->SetPosition({ 1.5f * 1,1.5f * 1,1 });
+	sampleBlock[1][2]->SetPosition({ 1.5f * 2,1.5f * 1,1 });
+	sampleBlock[1][3]->SetPosition({ 1.5f * 3,1.5f * 1,2 });
+	sampleBlock[1][4]->SetPosition({ 1.5f * 4,1.5f * 1,2 });
+	sampleBlock[1][5]->SetPosition({ 1.5f * 5,1.5f * 1,2 });
+	sampleBlock[1][6]->SetPosition({ 1.5f * 6,1.5f * 1,2 });
+	sampleBlock[1][7]->SetPosition({ 1.5f * 7,1.5f * 1,1 });
+	sampleBlock[1][8]->SetPosition({ 1.5f * 8,1.5f * 1,1 });
+	sampleBlock[1][9]->SetPosition({ 1.5f * 9,1.5f * 1,0 });
+
+	sampleBlock[2][0]->SetPosition({ 1.5f * 0,1.5f * 2,0 });
+	sampleBlock[2][1]->SetPosition({ 1.5f * 1,1.5f * 2,1 });
+	sampleBlock[2][2]->SetPosition({ 1.5f * 2,1.5f * 2,1 });
+	sampleBlock[2][3]->SetPosition({ 1.5f * 3,1.5f * 2,1 });
+	sampleBlock[2][4]->SetPosition({ 1.5f * 4,1.5f * 2,2 });
+	sampleBlock[2][5]->SetPosition({ 1.5f * 5,1.5f * 2,2 });
+	sampleBlock[2][6]->SetPosition({ 1.5f * 6,1.5f * 2,1 });
+	sampleBlock[2][7]->SetPosition({ 1.5f * 7,1.5f * 2,1 });
+	sampleBlock[2][8]->SetPosition({ 1.5f * 8,1.5f * 2,1 });
+	sampleBlock[2][9]->SetPosition({ 1.5f * 9,1.5f * 2,0 });
+
+	sampleBlock[3][0]->SetPosition({ 1.5f * 0,1.5f * 3,0 });
+	sampleBlock[3][1]->SetPosition({ 1.5f * 1,1.5f * 3,0 });
+	sampleBlock[3][2]->SetPosition({ 1.5f * 2,1.5f * 3,1 });
+	sampleBlock[3][3]->SetPosition({ 1.5f * 3,1.5f * 3,1 });
+	sampleBlock[3][4]->SetPosition({ 1.5f * 4,1.5f * 3,2 });
+	sampleBlock[3][5]->SetPosition({ 1.5f * 5,1.5f * 3,1 });
+	sampleBlock[3][6]->SetPosition({ 1.5f * 6,1.5f * 3,1 });
+	sampleBlock[3][7]->SetPosition({ 1.5f * 7,1.5f * 3,0 });
+	sampleBlock[3][8]->SetPosition({ 1.5f * 8,1.5f * 3,0 });
+	sampleBlock[3][9]->SetPosition({ 1.5f * 9,1.5f * 3,0 });
+
+	sampleBlock[4][0]->SetPosition({ 1.5f * 0,1.5f * 4,0 });
+	sampleBlock[4][1]->SetPosition({ 1.5f * 1,1.5f * 4,0 });
+	sampleBlock[4][2]->SetPosition({ 1.5f * 2,1.5f * 4,0 });
+	sampleBlock[4][3]->SetPosition({ 1.5f * 3,1.5f * 4,1 });
+	sampleBlock[4][4]->SetPosition({ 1.5f * 4,1.5f * 4,1 });
+	sampleBlock[4][5]->SetPosition({ 1.5f * 5,1.5f * 4,1 });
+	sampleBlock[4][6]->SetPosition({ 1.5f * 6,1.5f * 4,0 });
+	sampleBlock[4][7]->SetPosition({ 1.5f * 7,1.5f * 4,0 });
+	sampleBlock[4][8]->SetPosition({ 1.5f * 8,1.5f * 4,-1 });
+	sampleBlock[4][9]->SetPosition({ 1.5f * 9,1.5f * 4,-1 });
+
+	sampleBlock[5][0]->SetPosition({ 1.5f * 0,1.5f * 5,0 });
+	sampleBlock[5][1]->SetPosition({ 1.5f * 1,1.5f * 5,0 });
+	sampleBlock[5][2]->SetPosition({ 1.5f * 2,1.5f * 5,0 });
+	sampleBlock[5][3]->SetPosition({ 1.5f * 3,1.5f * 5,0 });
+	sampleBlock[5][4]->SetPosition({ 1.5f * 4,1.5f * 5,0 });
+	sampleBlock[5][5]->SetPosition({ 1.5f * 5,1.5f * 5,0 });
+	sampleBlock[5][6]->SetPosition({ 1.5f * 6,1.5f * 5,0 });
+	sampleBlock[5][7]->SetPosition({ 1.5f * 7,1.5f * 5,-1 });
+	sampleBlock[5][8]->SetPosition({ 1.5f * 8,1.5f * 5,-1 });
+	sampleBlock[5][9]->SetPosition({ 1.5f * 9,1.5f * 5,-1 });
+
+	sampleBlock[6][0]->SetPosition({ 1.5f * 0,1.5f * 6,0 });
+	sampleBlock[6][1]->SetPosition({ 1.5f * 1,1.5f * 6,0 });
+	sampleBlock[6][2]->SetPosition({ 1.5f * 2,1.5f * 6,0 });
+	sampleBlock[6][3]->SetPosition({ 1.5f * 3,1.5f * 6,0 });
+	sampleBlock[6][4]->SetPosition({ 1.5f * 4,1.5f * 6,0 });
+	sampleBlock[6][5]->SetPosition({ 1.5f * 5,1.5f * 6,0 });
+	sampleBlock[6][6]->SetPosition({ 1.5f * 6,1.5f * 6,0 });
+	sampleBlock[6][7]->SetPosition({ 1.5f * 7,1.5f * 6,-1 });
+	sampleBlock[6][8]->SetPosition({ 1.5f * 8,1.5f * 6,-1 });
+	sampleBlock[6][9]->SetPosition({ 1.5f * 9,1.5f * 6,-1 });
+
+	sampleBlock[7][0]->SetPosition({ 1.5f * 0,1.5f * 7,0 });
+	sampleBlock[7][1]->SetPosition({ 1.5f * 1,1.5f * 7,0 });
+	sampleBlock[7][2]->SetPosition({ 1.5f * 2,1.5f * 7,0 });
+	sampleBlock[7][3]->SetPosition({ 1.5f * 3,1.5f * 7,0 });
+	sampleBlock[7][4]->SetPosition({ 1.5f * 4,1.5f * 7,0 });
+	sampleBlock[7][5]->SetPosition({ 1.5f * 5,1.5f * 7,0 });
+	sampleBlock[7][6]->SetPosition({ 1.5f * 6,1.5f * 7,-1 });
+	sampleBlock[7][7]->SetPosition({ 1.5f * 7,1.5f * 7,-1 });
+	sampleBlock[7][8]->SetPosition({ 1.5f * 8,1.5f * 7,-1 });
+	sampleBlock[7][9]->SetPosition({ 1.5f * 9,1.5f * 7,-1 });
+
+	sampleBlock[8][0]->SetPosition({ 1.5f * 0,1.5f * 8,0 });
+	sampleBlock[8][1]->SetPosition({ 1.5f * 1,1.5f * 8,0 });
+	sampleBlock[8][2]->SetPosition({ 1.5f * 2,1.5f * 8,0 });
+	sampleBlock[8][3]->SetPosition({ 1.5f * 3,1.5f * 8,0 });
+	sampleBlock[8][4]->SetPosition({ 1.5f * 4,1.5f * 8,0 });
+	sampleBlock[8][5]->SetPosition({ 1.5f * 5,1.5f * 8,-1 });
+	sampleBlock[8][6]->SetPosition({ 1.5f * 6,1.5f * 8,-1 });
+	sampleBlock[8][7]->SetPosition({ 1.5f * 7,1.5f * 8,-1 });
+	sampleBlock[8][8]->SetPosition({ 1.5f * 8,1.5f * 8,-1 });
+	sampleBlock[8][9]->SetPosition({ 1.5f * 9,1.5f * 8,-1 });
+
+	sampleBlock[9][0]->SetPosition({ 1.5f * 0,1.5f * 9,0 });
+	sampleBlock[9][1]->SetPosition({ 1.5f * 1,1.5f * 9,0 });
+	sampleBlock[9][2]->SetPosition({ 1.5f * 2,1.5f * 9,0 });
+	sampleBlock[9][3]->SetPosition({ 1.5f * 3,1.5f * 9,-1 });
+	sampleBlock[9][4]->SetPosition({ 1.5f * 4,1.5f * 9,-1 });
+	sampleBlock[9][5]->SetPosition({ 1.5f * 5,1.5f * 9,-1 });
+	sampleBlock[9][6]->SetPosition({ 1.5f * 6,1.5f * 9,-1 });
+	sampleBlock[9][7]->SetPosition({ 1.5f * 7,1.5f * 9,-1 });
+	sampleBlock[9][8]->SetPosition({ 1.5f * 8,1.5f * 9,-1 });
+	sampleBlock[9][9]->SetPosition({ 1.5f * 9,1.5f * 9,-1 });
 }

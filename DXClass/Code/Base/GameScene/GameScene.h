@@ -20,6 +20,8 @@
 #include "CollisionManager.h"
 #include "Collision.h"
 
+#include "Timer.h"
+
 enum SceneName
 {
 	title,
@@ -63,27 +65,13 @@ private:
 	Sprite* titleBack = nullptr;
 	Sprite* gameBack = nullptr;
 	Sprite* endBack = nullptr;
-	Sprite* num0One = nullptr;
-	Sprite* num1One = nullptr;
-	Sprite* num2One = nullptr;
-	Sprite* num3One = nullptr;
-	Sprite* num0Ten = nullptr;
-	Sprite* num1Ten = nullptr;
-	Sprite* num2Ten = nullptr;
-	Sprite* num3Ten = nullptr;
-	Sprite* num4 = nullptr;
-	Sprite* num5 = nullptr;
-	Sprite* num6 = nullptr;
-	Sprite* num7 = nullptr;
-	Sprite* num8 = nullptr;
-	Sprite* num9 = nullptr;
 	Sprite* operation = nullptr;
 
 	// パーティクル
 	ParticleManager* particleMan = nullptr;
 
 	// 3dObj : FBX
-	static const int cubeNum = 9; // 縦横cubeの数
+	static const int cubeNum = 10; // 縦横cubeの数
 	std::unique_ptr<Model> modelSampleCube;
 	std::unique_ptr<Model> modelSampleBullet;
 	std::unique_ptr<Model> modelFbx;
@@ -99,18 +87,20 @@ private:
 	bool trigger1;
 	bool trigger2;
 
-	int time;
-	int secOne;
-	int secTen;
-	int count;
-
 	// ライト
 	Light* light = nullptr;
 
 	// ノイズ
 	Noise* perlin = nullptr;
 	XMFLOAT3 blockPos;
+	void block();
 	bool random;
 
 	int scene;
+
+	Timer* timer = nullptr;
+
+	int sec;
+	int time;
+	int count;
 };
