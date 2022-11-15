@@ -19,6 +19,7 @@
 #include "CollisionPrimitive.h"
 #include "CollisionManager.h"
 #include "Collision.h"
+#include "Quaternion.h"
 
 #include "Timer.h"
 
@@ -103,4 +104,14 @@ private:
 	int sec;
 	int time;
 	int count;
+
+	float speed;
+	float rotX;
+	float rotY;
+	float rotZ;
+	Quaternion qLocal;
+	const float ROT_UINT = 0.01f;
+	const XMFLOAT3 UnitX = { 1.0f, 0.0f, 0.0f };
+	const XMFLOAT3 UnitY = { 0.0f, 1.0f, 0.0f };
+	const XMFLOAT3 UnitZ = { 0.0f, 0.0f, 1.0f };
 };

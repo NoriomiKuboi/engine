@@ -13,6 +13,7 @@
 #include "CollisionInfo.h"
 #include "BaseCollider.h"
 #include "CollisionManager.h"
+#include "Quaternion.h"
 
 class BaseCollider;
 
@@ -69,6 +70,7 @@ public:
 	virtual ~Object3d(); // デストラクタ
 	virtual bool Init(); //初期化
 	virtual void Update(); // 更新
+	void PlayerUpdate(Quaternion pRotMatrix);
 	virtual void Draw(); // 描画
 	const XMFLOAT3& GetPosition() { return position; } // 座標の取得
 	const XMFLOAT3& GetRotation() { return rotation; } // 回転角の取得
@@ -98,4 +100,3 @@ protected:
 	const char* name = nullptr; //クラス名(デバック用)
 	BaseCollider* collider = nullptr; // コライダー
 };
-

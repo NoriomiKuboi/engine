@@ -22,6 +22,11 @@ GameScene::GameScene()
 	time = 0;
 	count = 0;
 
+	speed = 0.1f;
+	rotX = 0.0f;
+	rotY = 0.0f;
+	rotZ = 0.0f;
+	qLocal = quaternion(XMFLOAT3(0, 0, 1), 0);
 }
 
 GameScene::~GameScene()
@@ -259,25 +264,67 @@ void GameScene::Update()
 			pPos.y += 0.3f * sinf(angle);
 		}
 
-		else if (input->PushKey(DIK_W))
+		//else if (input->PushKey(DIK_W))
+		//{
+		//	pPos.y += 0.3f;
+		//}
+		//
+		//else if (input->PushKey(DIK_S))
+		//{
+		//	pPos.y -= 0.3f;
+		//}
+		//
+		//else if (input->PushKey(DIK_A))
+		//{
+		//	pPos.x -= 0.3f;
+		//}
+		//
+		//else if (input->PushKey(DIK_D))
+		//{
+		//	pPos.x += 0.3f;
+		//}
+
+		rotX = 0.0f;
+		rotY = 0.0f;
+		rotZ = 0.0f;
+
+		if (input->PushKey(DIK_E)) { rotX -= ROT_UINT; }
+		if (input->PushKey(DIK_Z)) { rotX += ROT_UINT; }
+		if (input->PushKey(DIK_A)) { rotY -= ROT_UINT; }
+		if (input->PushKey(DIK_D)) { rotY += ROT_UINT; }
+
+		if (input->PushKey(DIK_W))
 		{
-			pPos.y += 0.3f;
+			speed += 0.01f;
 		}
 
-		else if (input->PushKey(DIK_S))
+		if (input->PushKey(DIK_S))
 		{
-			pPos.y -= 0.3f;
+			speed -= 0.01f;
+
+			if (speed < 0.0f)
+			{
+				speed = 0.0f;
+			}
 		}
 
-		else if (input->PushKey(DIK_A))
-		{
-			pPos.x -= 0.3f;
-		}
+		XMFLOAT3 vSideAxis = getAxis(quaternion(UnitX, qLocal));
+		XMFLOAT3 vUpAxis = getAxis(quaternion(UnitY, qLocal));
+		XMFLOAT3 vForwardAxis = getAxis(quaternion(UnitZ, qLocal));
 
-		else if (input->PushKey(DIK_D))
-		{
-			pPos.x += 0.3f;
-		}
+		Quaternion qRoll = quaternion(vUpAxis, rotY);
+		Quaternion qPitch = quaternion(vSideAxis, rotX);
+		Quaternion qYow = quaternion(vForwardAxis, rotZ);
+
+		qLocal = qRoll * qLocal;
+		qLocal = qPitch * qLocal;
+		qLocal = qYow * qLocal;
+
+		pPos.x += vForwardAxis.x * speed;
+		pPos.y += vForwardAxis.y * speed;
+		pPos.z += vForwardAxis.z * speed;
+
+		samplePlayer->PlayerUpdate(qLocal);
 
 		for (int x = 0;x < cubeNum;x++)
 		{
@@ -332,7 +379,7 @@ void GameScene::Update()
 		samplePlayer->SetPosition(pPos);
 		samplePlayer->SetScale({ 0.5f,0.5f,0.5f });
 		samplePlayer->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-		samplePlayer->Update();
+		//samplePlayer->Update();
 
 		sampleBullet->SetPosition(pBullPos);
 		sampleBullet->SetScale({ 0.5f,0.5f,0.5f });
@@ -401,7 +448,7 @@ void GameScene::Draw()
 		{
 			for (int i = 0;i < cubeNum;i++)
 			{
-				sampleBlock[j][i]->Draw();
+				//sampleBlock[j][i]->Draw();
 			}
 		}
 
