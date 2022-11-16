@@ -44,20 +44,20 @@ void CameraSub::Update()
 	//}
 
 	// 左スティックでカメラを移動
-	if (Xinput->LeftStickX(true) || Xinput->LeftStickX(false) || Xinput->LeftStickY(true) || Xinput->LeftStickY(false))
-	{
-		//input->PushMouseMiddle()
-		//float dx = mouseMove.lX / 100.0f;
-		//float dy = mouseMove.lY / 100.0f;
-		float dx = cosf(rotL) * 0.3f;
-		float dy = sinf(rotL) * 0.3f;
-	
-		XMVECTOR move = { dx, dy, 0, 0 };
-		move = XMVector3Transform(move, matRot);
-	
-		MoveVector(move);
-		dirty = true;
-	}
+	//if (Xinput->LeftStickX(true) || Xinput->LeftStickX(false) || Xinput->LeftStickY(true) || Xinput->LeftStickY(false))
+	//{
+	//	//input->PushMouseMiddle()
+	//	//float dx = mouseMove.lX / 100.0f;
+	//	//float dy = mouseMove.lY / 100.0f;
+	//	float dx = cosf(rotL) * 0.3f;
+	//	float dy = sinf(rotL) * 0.3f;
+	//
+	//	XMVECTOR move = { dx, dy, 0, 0 };
+	//	move = XMVector3Transform(move, matRot);
+	//
+	//	MoveVector(move);
+	//	dirty = true;
+	//}
 
 	//else if (input->PushKey(DIK_W))
 	//{

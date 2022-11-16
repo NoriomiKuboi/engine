@@ -120,14 +120,18 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	modelSampleBullet = Model::CreateFromOBJ("bulletSample");
 
 	// 3Dオブジェクト生成
-	for (int j = 0;j < cubeNum;j++)
+	for (int k = 0;k < cubeNum;k++)
 	{
-		for (int i = 0;i < cubeNum;i++)
+		for (int j = 0;j < cubeNum;j++)
 		{
-			sampleBlock[j][i] = std::make_unique<Object3d>();
-			sampleBlock[j][i] = Object3d::Create(modelSampleCube.get());
+			for (int i = 0;i < cubeNum;i++)
+			{
+				sampleBlock[k][j][i] = std::make_unique<Object3d>();
+				sampleBlock[k][j][i] = Object3d::Create(modelSampleCube.get());
+			}
 		}
 	}
+
 	samplePlayer = std::make_unique<Object3d>();
 	samplePlayer = Object3d::Create(modelSampleCube.get());
 	sampleBullet = std::make_unique<Object3d>();
@@ -173,12 +177,15 @@ void GameScene::Update()
 	const XMFLOAT3& cameraPos = camera->GetEye();
 
 	ImGui::Begin("Info");
-	ImGui::SetWindowPos(ImVec2(20, 20), ImGuiCond_::ImGuiCond_FirstUseEver);
-	ImGui::SetWindowSize(ImVec2(210, 110), ImGuiCond_::ImGuiCond_FirstUseEver);
-	ImGui::Text("(%.1f FPS)", ImGui::GetIO().Framerate);
-	ImGui::Text("LSticlRot %.1f", Xinput->GetPadLStickAngle());
-	ImGui::Text("RSticlRot %.1f", Xinput->GetPadRStickAngle());
-	ImGui::Text("cameraPos( %.1f, %.1f, %.1f )", cameraPos.x, cameraPos.y, cameraPos.z);
+	//ImGui::SetWindowPos(ImVec2(20, 20), ImGuiCond_::ImGuiCond_FirstUseEver);
+	//ImGui::SetWindowSize(ImVec2(210, 110), ImGuiCond_::ImGuiCond_FirstUseEver);
+	//ImGui::Text("(%.1f FPS)", ImGui::GetIO().Framerate);
+	//ImGui::Text("LSticlRot %.1f", Xinput->GetPadLStickAngle());
+	//ImGui::Text("RSticlRot %.1f", Xinput->GetPadRStickAngle());
+	//ImGui::Text("cameraPos( %.1f, %.1f, %.1f )", cameraPos.x, cameraPos.y, cameraPos.z);
+	ImGui::Text("ZE  UP/DOWN");
+	ImGui::Text("AD  LEFT/RIGHT");
+	ImGui::Text("SPACE  SHOT");
 	ImGui::End();
 
 	// パーティクル生成
@@ -203,6 +210,9 @@ void GameScene::Update()
 
 		blockPos = { 0.0f,0.0f,0.0f };
 		pPos = { 6.5f,6.5f,-5.0f };
+		rotX = 0.0f;
+		rotY = 0.0f;
+		rotZ = 0.0f;
 		pBullPos = pPos;
 		random = true;
 		trigger1 = false;
@@ -240,29 +250,32 @@ void GameScene::Update()
 			scene = SceneName::end;
 		}
 
-		sec = time / (45 * 10) % 6;
+		sec = time / (35 * 10) % 6;
 
 		for (int x = 0; x < cubeNum; x++)
 		{
 			for (int y = 0; y < cubeNum; y++)
 			{
-				blockPos.x = float(x) * 1.5f;
-				blockPos.y = float(y) * 1.5f;
-				blockPos.z = perlin->Perlin(blockPos.x, blockPos.y);
-				sampleBlock[x][y]->SetScale({ 0.8f,0.8f,0.8f });
-				//sampleBlock[x][y]->SetPosition(blockPos);
+				for (int z = 0;z < cubeNum;z++)
+				{
+					blockPos.x = float(x) * 1.5f;
+					blockPos.y = float(y) * 1.5f;
+					blockPos.z = float(z) * 1.5f;
+					//blockPos.z = perlin->Perlin(blockPos.x, blockPos.y);
+					//sampleBlock[x][y]->SetScale({ 0.8f,0.8f,0.8f });
+					sampleBlock[x][y][z]->SetScale({ 0.5f,0.5f,0.5f });
+					sampleBlock[x][y][z]->SetPosition(blockPos);
+				}
 			}
 		}
 
-		block();
-
-		if (Xinput->LeftStickX(true) || Xinput->LeftStickX(false) || Xinput->LeftStickY(true) || Xinput->LeftStickY(false))
-		{
-			float LSticlRot = Xinput->GetPadLStickAngle();
-			float angle = XMConvertToRadians(LSticlRot);
-			pPos.x += 0.3f * cosf(angle);
-			pPos.y += 0.3f * sinf(angle);
-		}
+		//if (Xinput->LeftStickX(true) || Xinput->LeftStickX(false) || Xinput->LeftStickY(true) || Xinput->LeftStickY(false))
+		//{
+		//	float LSticlRot = Xinput->GetPadLStickAngle();
+		//	float angle = XMConvertToRadians(LSticlRot);
+		//	pPos.x += 0.3f * cosf(angle);
+		//	pPos.y += 0.3f * sinf(angle);
+		//}
 
 		//else if (input->PushKey(DIK_W))
 		//{
@@ -293,20 +306,24 @@ void GameScene::Update()
 		if (input->PushKey(DIK_A)) { rotY -= ROT_UINT; }
 		if (input->PushKey(DIK_D)) { rotY += ROT_UINT; }
 
-		if (input->PushKey(DIK_W))
+		if (speed > 0.2f)
 		{
 			speed += 0.01f;
 		}
-
-		if (input->PushKey(DIK_S))
-		{
-			speed -= 0.01f;
-
-			if (speed < 0.0f)
-			{
-				speed = 0.0f;
-			}
-		}
+		//if (input->PushKey(DIK_W))
+		//{
+		//	speed += 0.01f;
+		//}
+		//
+		//if (input->PushKey(DIK_S))
+		//{
+		//	speed -= 0.01f;
+		//
+		//	if (speed < 0.0f)
+		//	{
+		//		speed = 0.0f;
+		//	}
+		//}
 
 		XMFLOAT3 vSideAxis = getAxis(quaternion(UnitX, qLocal));
 		XMFLOAT3 vUpAxis = getAxis(quaternion(UnitY, qLocal));
@@ -324,13 +341,15 @@ void GameScene::Update()
 		pPos.y += vForwardAxis.y * speed;
 		pPos.z += vForwardAxis.z * speed;
 
-		samplePlayer->PlayerUpdate(qLocal);
 
 		for (int x = 0;x < cubeNum;x++)
 		{
 			for (int y = 0;y < cubeNum;y++)
 			{
-				sampleBlock[x][y]->Update();
+				for (int z = 0;z < cubeNum;z++)
+				{
+					sampleBlock[x][y][z]->Update();
+				}
 			}
 		}
 
@@ -342,13 +361,14 @@ void GameScene::Update()
 
 		if (trigger1 == true)
 		{
-			vec += g;
-			pBullPos.z += vec;
+			pBullPos.x += vForwardAxis.x * 0.5f;
+			pBullPos.y += vForwardAxis.y * 0.5f;
+			pBullPos.z += vForwardAxis.z * 0.5f;
 		}
 
 		if (pBullPos.z > 20.0f)
 		{
-			pBullPos.z = -5.0f;
+			pBullPos = pPos;
 			vec = 0.0f;
 			trigger1 = false;
 			trigger2 = false;
@@ -358,20 +378,23 @@ void GameScene::Update()
 		{
 			for (int y = 0;y < cubeNum;y++)
 			{
-				Sphere pBullet;
-				pBullet.center = { sampleBlock[x][y]->GetPosition().x,sampleBlock[x][y]->GetPosition().y,sampleBlock[x][y]->GetPosition().z,1 };
-				pBullet.radius = 1;
-				Box block;
-				block.center = { sampleBullet->GetPosition().x,sampleBullet->GetPosition().y,sampleBullet->GetPosition().z,1 };
-
-				if (Collision::CheckSphere2Box(pBullet, block))
+				for (int z = 0;z < cubeNum;z++)
 				{
-					sampleBlock[x][y]->SetColor({ 1,0,0,1 });
-				}
+					Sphere pBullet;
+					pBullet.center = { sampleBlock[x][y][z]->GetPosition().x,sampleBlock[x][y][z]->GetPosition().y,sampleBlock[x][y][z]->GetPosition().z,1 };
+					pBullet.radius = 1;
+					Box block;
+					block.center = { sampleBullet->GetPosition().x,sampleBullet->GetPosition().y,sampleBullet->GetPosition().z,1 };
 
-				else
-				{
-					sampleBlock[x][y]->SetColor({ 0,0.4f,0,1 });
+					if (Collision::CheckSphere2Box(pBullet, block))
+					{
+						sampleBlock[x][y][z]->SetColor({ 1,0,0,1 });
+					}
+
+					else
+					{
+						sampleBlock[x][y][z]->SetColor({ 0,0.4f,0,1 });
+					}
 				}
 			}
 		}
@@ -380,6 +403,8 @@ void GameScene::Update()
 		samplePlayer->SetScale({ 0.5f,0.5f,0.5f });
 		samplePlayer->SetColor({ 0.0f,0.0f,0.0f,1.0f });
 		//samplePlayer->Update();
+		samplePlayer->PlayerUpdate(qLocal);
+		camera->FollowingCamera(vUpAxis, vForwardAxis, pPos);
 
 		sampleBullet->SetPosition(pBullPos);
 		sampleBullet->SetScale({ 0.5f,0.5f,0.5f });
@@ -444,11 +469,14 @@ void GameScene::Draw()
 		Object3d::BeforeDraw(cmdList);
 
 		// 3Dオブジェクト描画
-		for (int j = 0;j < cubeNum;j++)
+		for (int k = 0;k < cubeNum;k++)
 		{
-			for (int i = 0;i < cubeNum;i++)
+			for (int j = 0;j < cubeNum;j++)
 			{
-				//sampleBlock[j][i]->Draw();
+				for (int i = 0;i < cubeNum;i++)
+				{
+					sampleBlock[k][j][i]->Draw();
+				}
 			}
 		}
 
@@ -470,7 +498,7 @@ void GameScene::Draw()
 
 		timer->Draw();
 		
-		operation->Draw();
+		//operation->Draw();
 
 		// デバッグテキストの描画
 		debugText.DrawAll(cmdList);
@@ -525,117 +553,4 @@ void GameScene::CreateParticles()
 		// 追加
 		particleMan->Add(60, pos, vel, acc, 1.0f, 0.0f);
 	}
-}
-
-void GameScene::block()
-{
-	sampleBlock[0][0]->SetPosition({ 1.5f * 0,0,0 });
-	sampleBlock[0][1]->SetPosition({ 1.5f * 1,0,1 });
-	sampleBlock[0][2]->SetPosition({ 1.5f * 2,0,1 });
-	sampleBlock[0][3]->SetPosition({ 1.5f * 3,0,2 });
-	sampleBlock[0][4]->SetPosition({ 1.5f * 4,0,2 });
-	sampleBlock[0][5]->SetPosition({ 1.5f * 5,0,2 });
-	sampleBlock[0][6]->SetPosition({ 1.5f * 6,0,2 });
-	sampleBlock[0][7]->SetPosition({ 1.5f * 7,0,1 });
-	sampleBlock[0][8]->SetPosition({ 1.5f * 8,0,1 });
-	sampleBlock[0][9]->SetPosition({ 1.5f * 9,0,0 });
-
-	sampleBlock[1][0]->SetPosition({ 1.5f * 0,1.5f * 1,0 });
-	sampleBlock[1][1]->SetPosition({ 1.5f * 1,1.5f * 1,1 });
-	sampleBlock[1][2]->SetPosition({ 1.5f * 2,1.5f * 1,1 });
-	sampleBlock[1][3]->SetPosition({ 1.5f * 3,1.5f * 1,2 });
-	sampleBlock[1][4]->SetPosition({ 1.5f * 4,1.5f * 1,2 });
-	sampleBlock[1][5]->SetPosition({ 1.5f * 5,1.5f * 1,2 });
-	sampleBlock[1][6]->SetPosition({ 1.5f * 6,1.5f * 1,2 });
-	sampleBlock[1][7]->SetPosition({ 1.5f * 7,1.5f * 1,1 });
-	sampleBlock[1][8]->SetPosition({ 1.5f * 8,1.5f * 1,1 });
-	sampleBlock[1][9]->SetPosition({ 1.5f * 9,1.5f * 1,0 });
-
-	sampleBlock[2][0]->SetPosition({ 1.5f * 0,1.5f * 2,0 });
-	sampleBlock[2][1]->SetPosition({ 1.5f * 1,1.5f * 2,1 });
-	sampleBlock[2][2]->SetPosition({ 1.5f * 2,1.5f * 2,1 });
-	sampleBlock[2][3]->SetPosition({ 1.5f * 3,1.5f * 2,1 });
-	sampleBlock[2][4]->SetPosition({ 1.5f * 4,1.5f * 2,2 });
-	sampleBlock[2][5]->SetPosition({ 1.5f * 5,1.5f * 2,2 });
-	sampleBlock[2][6]->SetPosition({ 1.5f * 6,1.5f * 2,1 });
-	sampleBlock[2][7]->SetPosition({ 1.5f * 7,1.5f * 2,1 });
-	sampleBlock[2][8]->SetPosition({ 1.5f * 8,1.5f * 2,1 });
-	sampleBlock[2][9]->SetPosition({ 1.5f * 9,1.5f * 2,0 });
-
-	sampleBlock[3][0]->SetPosition({ 1.5f * 0,1.5f * 3,0 });
-	sampleBlock[3][1]->SetPosition({ 1.5f * 1,1.5f * 3,0 });
-	sampleBlock[3][2]->SetPosition({ 1.5f * 2,1.5f * 3,1 });
-	sampleBlock[3][3]->SetPosition({ 1.5f * 3,1.5f * 3,1 });
-	sampleBlock[3][4]->SetPosition({ 1.5f * 4,1.5f * 3,2 });
-	sampleBlock[3][5]->SetPosition({ 1.5f * 5,1.5f * 3,1 });
-	sampleBlock[3][6]->SetPosition({ 1.5f * 6,1.5f * 3,1 });
-	sampleBlock[3][7]->SetPosition({ 1.5f * 7,1.5f * 3,0 });
-	sampleBlock[3][8]->SetPosition({ 1.5f * 8,1.5f * 3,0 });
-	sampleBlock[3][9]->SetPosition({ 1.5f * 9,1.5f * 3,0 });
-
-	sampleBlock[4][0]->SetPosition({ 1.5f * 0,1.5f * 4,0 });
-	sampleBlock[4][1]->SetPosition({ 1.5f * 1,1.5f * 4,0 });
-	sampleBlock[4][2]->SetPosition({ 1.5f * 2,1.5f * 4,0 });
-	sampleBlock[4][3]->SetPosition({ 1.5f * 3,1.5f * 4,1 });
-	sampleBlock[4][4]->SetPosition({ 1.5f * 4,1.5f * 4,1 });
-	sampleBlock[4][5]->SetPosition({ 1.5f * 5,1.5f * 4,1 });
-	sampleBlock[4][6]->SetPosition({ 1.5f * 6,1.5f * 4,0 });
-	sampleBlock[4][7]->SetPosition({ 1.5f * 7,1.5f * 4,0 });
-	sampleBlock[4][8]->SetPosition({ 1.5f * 8,1.5f * 4,-1 });
-	sampleBlock[4][9]->SetPosition({ 1.5f * 9,1.5f * 4,-1 });
-
-	sampleBlock[5][0]->SetPosition({ 1.5f * 0,1.5f * 5,0 });
-	sampleBlock[5][1]->SetPosition({ 1.5f * 1,1.5f * 5,0 });
-	sampleBlock[5][2]->SetPosition({ 1.5f * 2,1.5f * 5,0 });
-	sampleBlock[5][3]->SetPosition({ 1.5f * 3,1.5f * 5,0 });
-	sampleBlock[5][4]->SetPosition({ 1.5f * 4,1.5f * 5,0 });
-	sampleBlock[5][5]->SetPosition({ 1.5f * 5,1.5f * 5,0 });
-	sampleBlock[5][6]->SetPosition({ 1.5f * 6,1.5f * 5,0 });
-	sampleBlock[5][7]->SetPosition({ 1.5f * 7,1.5f * 5,-1 });
-	sampleBlock[5][8]->SetPosition({ 1.5f * 8,1.5f * 5,-1 });
-	sampleBlock[5][9]->SetPosition({ 1.5f * 9,1.5f * 5,-1 });
-
-	sampleBlock[6][0]->SetPosition({ 1.5f * 0,1.5f * 6,0 });
-	sampleBlock[6][1]->SetPosition({ 1.5f * 1,1.5f * 6,0 });
-	sampleBlock[6][2]->SetPosition({ 1.5f * 2,1.5f * 6,0 });
-	sampleBlock[6][3]->SetPosition({ 1.5f * 3,1.5f * 6,0 });
-	sampleBlock[6][4]->SetPosition({ 1.5f * 4,1.5f * 6,0 });
-	sampleBlock[6][5]->SetPosition({ 1.5f * 5,1.5f * 6,0 });
-	sampleBlock[6][6]->SetPosition({ 1.5f * 6,1.5f * 6,0 });
-	sampleBlock[6][7]->SetPosition({ 1.5f * 7,1.5f * 6,-1 });
-	sampleBlock[6][8]->SetPosition({ 1.5f * 8,1.5f * 6,-1 });
-	sampleBlock[6][9]->SetPosition({ 1.5f * 9,1.5f * 6,-1 });
-
-	sampleBlock[7][0]->SetPosition({ 1.5f * 0,1.5f * 7,0 });
-	sampleBlock[7][1]->SetPosition({ 1.5f * 1,1.5f * 7,0 });
-	sampleBlock[7][2]->SetPosition({ 1.5f * 2,1.5f * 7,0 });
-	sampleBlock[7][3]->SetPosition({ 1.5f * 3,1.5f * 7,0 });
-	sampleBlock[7][4]->SetPosition({ 1.5f * 4,1.5f * 7,0 });
-	sampleBlock[7][5]->SetPosition({ 1.5f * 5,1.5f * 7,0 });
-	sampleBlock[7][6]->SetPosition({ 1.5f * 6,1.5f * 7,-1 });
-	sampleBlock[7][7]->SetPosition({ 1.5f * 7,1.5f * 7,-1 });
-	sampleBlock[7][8]->SetPosition({ 1.5f * 8,1.5f * 7,-1 });
-	sampleBlock[7][9]->SetPosition({ 1.5f * 9,1.5f * 7,-1 });
-
-	sampleBlock[8][0]->SetPosition({ 1.5f * 0,1.5f * 8,0 });
-	sampleBlock[8][1]->SetPosition({ 1.5f * 1,1.5f * 8,0 });
-	sampleBlock[8][2]->SetPosition({ 1.5f * 2,1.5f * 8,0 });
-	sampleBlock[8][3]->SetPosition({ 1.5f * 3,1.5f * 8,0 });
-	sampleBlock[8][4]->SetPosition({ 1.5f * 4,1.5f * 8,0 });
-	sampleBlock[8][5]->SetPosition({ 1.5f * 5,1.5f * 8,-1 });
-	sampleBlock[8][6]->SetPosition({ 1.5f * 6,1.5f * 8,-1 });
-	sampleBlock[8][7]->SetPosition({ 1.5f * 7,1.5f * 8,-1 });
-	sampleBlock[8][8]->SetPosition({ 1.5f * 8,1.5f * 8,-1 });
-	sampleBlock[8][9]->SetPosition({ 1.5f * 9,1.5f * 8,-1 });
-
-	sampleBlock[9][0]->SetPosition({ 1.5f * 0,1.5f * 9,0 });
-	sampleBlock[9][1]->SetPosition({ 1.5f * 1,1.5f * 9,0 });
-	sampleBlock[9][2]->SetPosition({ 1.5f * 2,1.5f * 9,0 });
-	sampleBlock[9][3]->SetPosition({ 1.5f * 3,1.5f * 9,-1 });
-	sampleBlock[9][4]->SetPosition({ 1.5f * 4,1.5f * 9,-1 });
-	sampleBlock[9][5]->SetPosition({ 1.5f * 5,1.5f * 9,-1 });
-	sampleBlock[9][6]->SetPosition({ 1.5f * 6,1.5f * 9,-1 });
-	sampleBlock[9][7]->SetPosition({ 1.5f * 7,1.5f * 9,-1 });
-	sampleBlock[9][8]->SetPosition({ 1.5f * 8,1.5f * 9,-1 });
-	sampleBlock[9][9]->SetPosition({ 1.5f * 9,1.5f * 9,-1 });
 }

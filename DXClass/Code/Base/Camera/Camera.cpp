@@ -35,6 +35,7 @@ void Camera::Update()
 			UpdateProjectionMatrix();
 			projectionDirty = false;
 		}
+
 		// ビュープロジェクションの合成
 		matViewProjection = matView * matProjection;
 	}
@@ -128,6 +129,21 @@ void Camera::UpdateProjectionMatrix()
 		aspectRatio,
 		0.1f, 1000.0f
 	);
+}
+
+void Camera::FollowingCamera(XMFLOAT3 vUpAxis, XMFLOAT3 vForwardAxis, XMFLOAT3 playerPos)
+{
+	//XMFLOAT3 backVector = { -vForwardAxis.x,-vForwardAxis.y,-vForwardAxis.z };
+	//XMVECTOR vTargetEye = { 0.0f, 0.0f, -distance, 1.0f };
+	//XMVECTOR vUp = { vUpAxis.x, vUpAxis.y, vUpAxis.z, 0.0f };
+	//
+	//backVector = { backVector.x * distance, backVector.y * distance ,backVector.z * distance };
+	//
+	//XMVECTOR cameraPos = vTargetEye ;
+	//
+	//matView = XMMatrixLookAtLH(cameraPos, vTargetEye, vUp);
+	//
+	//matViewProjection = matView * matViewProjection;
 }
 
 void Camera::MoveEyeVector(const XMFLOAT3& move)

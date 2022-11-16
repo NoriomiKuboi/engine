@@ -77,7 +77,7 @@ private:
 	std::unique_ptr<Model> modelSampleBullet;
 	std::unique_ptr<Model> modelFbx;
 	std::unique_ptr<Object3d> samplePlayer;
-	std::unique_ptr<Object3d> sampleBlock[cubeNum][cubeNum];
+	std::unique_ptr<Object3d> sampleBlock[cubeNum][cubeNum][cubeNum];
 	std::unique_ptr<Object3d> sampleBullet;
 	std::unique_ptr<ObjectFbx> objFbx;
 
@@ -94,7 +94,6 @@ private:
 	// ÉmÉCÉY
 	Noise* perlin = nullptr;
 	XMFLOAT3 blockPos;
-	void block();
 	bool random;
 
 	int scene;
@@ -110,7 +109,7 @@ private:
 	float rotY;
 	float rotZ;
 	Quaternion qLocal;
-	const float ROT_UINT = 0.01f;
+	const float ROT_UINT = 0.03f;
 	const XMFLOAT3 UnitX = { 1.0f, 0.0f, 0.0f };
 	const XMFLOAT3 UnitY = { 0.0f, 1.0f, 0.0f };
 	const XMFLOAT3 UnitZ = { 0.0f, 0.0f, 1.0f };

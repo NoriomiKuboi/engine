@@ -116,8 +116,8 @@ void Timer::Update()
 		count++;
 	}
 
-	secOne = time / 45 % 10;
-	secTen = time / (45 * 10) % 6;
+	secOne = time / 35 % 10;
+	secTen = time / (35 * 10) % 6;
 
 	//secOne
 	if (secOne == 0)

@@ -20,6 +20,8 @@ public:
 	void UpdateViewMatrix(); // ビュー行列を更新
 
 	void UpdateProjectionMatrix(); // 射影行列を更新
+
+	void FollowingCamera(XMFLOAT3 vUpAxis, XMFLOAT3 vForwardAxis, XMFLOAT3 playerPos);
 	
 	// ビュー行列の取得
 	inline const XMMATRIX& GetViewMatrix(){ 
@@ -71,6 +73,10 @@ public:
 		viewDirty = true;
 	}
 
+	void SetDistance(float distance) {
+		this->distance = distance; viewDirty = true;
+	}
+
 	/// ベクトルによる視点移動
 	void MoveEyeVector(const XMFLOAT3& move);
 	void MoveEyeVector(const XMVECTOR& move);
@@ -90,5 +96,6 @@ protected:
 	XMFLOAT3 eye = { 0, 0, -20 }; // 視点座標
 	XMFLOAT3 target = { 0, 0, 0 }; // 注視点座標
 	XMFLOAT3 up = { 0, 1, 0 }; // 上方向ベクトル
+	float distance = 20; // カメラ注視点までの距離
 	float aspectRatio = 1.0f; // アスペクト比
 };
