@@ -2,6 +2,7 @@
 #include <cassert>
 #include <sstream>
 #include <iomanip>
+#include <stdlib.h>
 
 #include "ObjectFbx.h"
 
@@ -10,16 +11,25 @@ using namespace DirectX;
 GameScene::GameScene()
 {
 	blockPos = { 0.0f,0.0f,0.0f };
-	pPos = { 6.0f,6.0f,-5.0f };
+	pPos = { 13.5f,13.5f,-5.0f };
+	for (int i = 0;i < enemyNum;i++)
+	{
+		ePos[i] = { 0.0f,0.0f,0.0f };
+	}
+	bPos = { 30.0f,30.0f,30.0f };
 	pBullPos = pPos;
 	random = true;
 	trigger1 = false;
 	trigger2 = false;
+	randNum = true;
 	scene = SceneName::title;
 
 	sec = 0;
 	time = 0;
 	count = 0;
+
+	hit = 0;
+	hitBoss = 0;
 
 	speed = 0.1f;
 	rot = { 0.0f,0.0f,0.0f };
@@ -117,22 +127,30 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	modelSampleBullet = Model::CreateFromOBJ("bulletSample");
 
 	// 3Dオブジェクト生成
-	for (int k = 0;k < cubeNum;k++)
+	//for (int k = 0;k < cubeNum;k++)
+	//{
+	//	for (int j = 0;j < cubeNum;j++)
+	//	{
+	//		for (int i = 0;i < cubeNum;i++)
+	//		{
+	//			sampleBlock[k][j][i] = std::make_unique<Object3d>();
+	//			sampleBlock[k][j][i] = Object3d::Create(modelSampleCube.get());
+	//		}
+	//	}
+	//}
+
+	for (int i = 0;i < enemyNum;i++)
 	{
-		for (int j = 0;j < cubeNum;j++)
-		{
-			for (int i = 0;i < cubeNum;i++)
-			{
-				sampleBlock[k][j][i] = std::make_unique<Object3d>();
-				sampleBlock[k][j][i] = Object3d::Create(modelSampleCube.get());
-			}
-		}
+		sampleEnemy[i] = std::make_unique<Object3d>();
+		sampleEnemy[i] = Object3d::Create(modelSampleCube.get());
 	}
 
 	samplePlayer = std::make_unique<Object3d>();
 	samplePlayer = Object3d::Create(modelSampleCube.get());
 	sampleBullet = std::make_unique<Object3d>();
 	sampleBullet = Object3d::Create(modelSampleBullet.get());
+	sampleBoss = std::make_unique<Object3d>();
+	sampleBoss = Object3d::Create(modelSampleCube.get());
 
 	// カメラ注視点をセット
 	camera->SetTarget({ 6.0f, 6.0f, 0 });
@@ -174,19 +192,6 @@ void GameScene::Update()
 	const XMFLOAT3& cameraPos = camera->GetEye();
 	XMFLOAT3 num = { 0.0f,0.0f,0.0f };
 
-	ImGui::Begin("Info");
-	ImGui::SetWindowPos(ImVec2(20, 20), ImGuiCond_::ImGuiCond_FirstUseEver);
-	ImGui::SetWindowSize(ImVec2(300, 200), ImGuiCond_::ImGuiCond_FirstUseEver);
-	ImGui::Text("(%.1f FPS)", ImGui::GetIO().Framerate);
-	ImGui::Text("LSticlRot %.1f", Xinput->GetPadLStickAngle());
-	ImGui::Text("RSticlRot %.1f", Xinput->GetPadRStickAngle());
-	ImGui::Text("cameraPos( %.1f, %.1f, %.1f )", cameraPos.x, cameraPos.y, cameraPos.z);
-	ImGui::Text("num( %.5f, %.5f, %.5f )", num.x, num.y, num.z);
-	ImGui::Text("ZE  UP/DOWN");
-	ImGui::Text("AD  LEFT/RIGHT");
-	ImGui::Text("SPACE  SHOT");
-	ImGui::End();
-
 	// パーティクル生成
 	CreateParticles();
 
@@ -208,11 +213,30 @@ void GameScene::Update()
 		camera->SetDistance(20.0f);
 
 		blockPos = { 0.0f,0.0f,0.0f };
-		pPos = { 6.5f,6.5f,-5.0f };
+		pPos = { 13.5f,13.5f,-5.0f };
+
 		rot = { 0.0f,0.0f,0.0f };
 		qLocal = quaternion(XMFLOAT3(0, 0, 1), 0);
 		pBullPos = pPos;
+		//for (int x = 0; x < cubeNum; x++)
+		//{
+		//	for (int y = 0; y < cubeNum; y++)
+		//	{
+		//		for (int z = 0;z < cubeNum;z++)
+		//		{
+		//			sampleBlock[x][y][z]->SetColor({ 1,1,1,1 });
+		//		}
+		//	}
+		//}
+		for (int i = 0;i < enemyNum;i++)
+		{
+			sampleEnemy[i]->SetColor({ 1,1,1,1 });
+			ePos[i] = { 0.0f,0.0f,0.0f };
+		}
+		sampleBoss->SetColor({ 1,1,1,1 });
+		bPos = { 30.0f,30.0f,30.0f };
 		random = true;
+		randNum = true;
 		trigger1 = false;
 		trigger2 = false;
 
@@ -220,16 +244,31 @@ void GameScene::Update()
 		time = 0;
 		count = 0;
 
+		hit = 0;
+		hitBoss = 0.0f;
+
 		timer->Reset();
 
 		if (Xinput->TriggerButton(XInputManager::PUD_BUTTON::PAD_A) || input->TriggerKey(DIK_RETURN))
 		{
 			scene = game;
 		}
+
+		for (int i = 0;i < enemyNum;i++)
+		{
+			if (randNum == true)
+			{
+				ePos[i].x = rand() % 10;
+				ePos[i].y = rand() % 10;
+				ePos[i].z = rand() % 10;
+			}
+		}
+
 	}
 
 	else if (scene == game)
 	{
+		randNum = false;
 		if (sec < 3)
 		{
 			time++;
@@ -242,27 +281,41 @@ void GameScene::Update()
 
 		if (count == 70)
 		{
+			//scene = SceneName::end;
+		}
+
+		if (hitBoss > 100)
+		{
 			scene = SceneName::end;
 		}
 
 		sec = time / (35 * 10) % 6;
 
-		for (int x = 0; x < cubeNum; x++)
+		//for (int x = 0; x < cubeNum; x++)
+		//{
+		//	for (int y = 0; y < cubeNum; y++)
+		//	{
+		//		for (int z = 0;z < cubeNum;z++)
+		//		{
+		//			blockPos.x = float(x) * 3.0f;
+		//			blockPos.y = float(y) * 3.0f;
+		//			blockPos.z = float(z) * 3.0f;
+		//			//blockPos.z = perlin->Perlin(blockPos.x, blockPos.y);
+		//			//sampleBlock[x][y]->SetScale({ 0.8f,0.8f,0.8f });
+		//			sampleBlock[x][y][z]->SetScale({ 0.5f,0.5f,0.5f });
+		//			sampleBlock[x][y][z]->SetPosition(blockPos);
+		//		}
+		//	}
+		//}
+
+		for (int i = 0;i < enemyNum;i++)
 		{
-			for (int y = 0; y < cubeNum; y++)
-			{
-				for (int z = 0;z < cubeNum;z++)
-				{
-					blockPos.x = float(x) * 3.0f;
-					blockPos.y = float(y) * 3.0f;
-					blockPos.z = float(z) * 3.0f;
-					//blockPos.z = perlin->Perlin(blockPos.x, blockPos.y);
-					//sampleBlock[x][y]->SetScale({ 0.8f,0.8f,0.8f });
-					sampleBlock[x][y][z]->SetScale({ 0.5f,0.5f,0.5f });
-					sampleBlock[x][y][z]->SetPosition(blockPos);
-				}
-			}
+			sampleEnemy[i]->SetScale({ 0.5f,0.5f,0.5f });
+			sampleEnemy[i]->SetPosition({ePos[i]});
 		}
+
+		sampleBoss->SetScale({ 20.0f,20.0f,20.0f });
+		sampleBoss->SetPosition({ bPos });
 
 		rot = { 0.0f,0.0f,0.0f };
 
@@ -275,8 +328,8 @@ void GameScene::Update()
 			rot.y += sinf(angle) / adjustRot;
 		}
 
-		if (input->PushKey(DIK_E)) { rot.x -= ROT_UINT; }
-		if (input->PushKey(DIK_Z)) { rot.x += ROT_UINT; }
+		if (input->PushKey(DIK_W)) { rot.x -= ROT_UINT; }
+		if (input->PushKey(DIK_S)) { rot.x += ROT_UINT; }
 		if (input->PushKey(DIK_A)) { rot.y -= ROT_UINT; }
 		if (input->PushKey(DIK_D)) { rot.y += ROT_UINT; }
 
@@ -298,16 +351,16 @@ void GameScene::Update()
 		pPos.y += vForwardAxis.y * speed;
 		pPos.z += vForwardAxis.z * speed;
 
-		for (int x = 0;x < cubeNum;x++)
-		{
-			for (int y = 0;y < cubeNum;y++)
-			{
-				for (int z = 0;z < cubeNum;z++)
-				{
-					sampleBlock[x][y][z]->Update();
-				}
-			}
-		}
+		//for (int x = 0;x < cubeNum;x++)
+		//{
+		//	for (int y = 0;y < cubeNum;y++)
+		//	{
+		//		for (int z = 0;z < cubeNum;z++)
+		//		{
+		//			sampleBlock[x][y][z]->Update();
+		//		}
+		//	}
+		//}
 
 		if (Xinput->TriggerButton(XInputManager::PUD_BUTTON::PAD_RT) || input->TriggerKey(DIK_SPACE))
 		{
@@ -324,45 +377,94 @@ void GameScene::Update()
 
 		if (pBullPos.z > 20.0f)
 		{
-			pBullPos = pPos;
+			pBullPos = {10000.0f,10000.0f,10000.0f};
 			trigger1 = false;
 			trigger2 = false;
 		}
 
-		for (int x = 0;x < cubeNum;x++)
+		//for (int x = 0;x < cubeNum;x++)
+		//{
+		//	for (int y = 0;y < cubeNum;y++)
+		//	{
+		//		for (int z = 0;z < cubeNum;z++)
+		//		{
+		//			Sphere pBullet;
+		//			pBullet.center = { sampleBullet->GetPosition().x,sampleBullet->GetPosition().y,sampleBullet->GetPosition().z,1 };
+		//			pBullet.radius = 1.5f;
+		//			Box block;
+		//			block.center = { sampleBlock[x][y][z]->GetPosition().x,sampleBlock[x][y][z]->GetPosition().y,sampleBlock[x][y][z]->GetPosition().z,1 };
+		//			block.scale = { sampleBlock[x][y][z]->GetScale().x, sampleBlock[x][y][z]->GetScale().y, sampleBlock[x][y][z]->GetScale().z };
+		//
+		//			if (Collision::CheckSphere2Box(pBullet, block))
+		//			{
+		//				sampleBlock[x][y][z]->SetColor({ 1,0,0,1 });
+		//				hit++;
+		//			}
+		//		}
+		//	}
+		//}
+
+		for (int i = 0;i < enemyNum;i++)
 		{
-			for (int y = 0;y < cubeNum;y++)
+			Sphere pBullet;
+			pBullet.center = { sampleBullet->GetPosition().x,sampleBullet->GetPosition().y,sampleBullet->GetPosition().z,1 };
+			pBullet.radius = 2.0;
+
+			Box block;
+			block.center = { sampleEnemy[i]->GetPosition().x,sampleEnemy[i]->GetPosition().y,sampleEnemy[i]->GetPosition().z,1 };
+			block.scale = { sampleEnemy[i]->GetScale().x, sampleEnemy[i]->GetScale().y, sampleEnemy[i]->GetScale().z };
+
+			Box boss;
+			boss.center = { sampleBoss->GetPosition().x,sampleBoss->GetPosition().y,sampleBoss->GetPosition().z,1 };
+			boss.scale = { sampleBoss->GetScale().x, sampleBoss->GetScale().y, sampleBoss->GetScale().z };
+
+			if (Collision::CheckSphere2Box(pBullet, block))
 			{
-				for (int z = 0;z < cubeNum;z++)
-				{
-					Sphere pBullet;
-					pBullet.center = { sampleBlock[x][y][z]->GetPosition().x,sampleBlock[x][y][z]->GetPosition().y,sampleBlock[x][y][z]->GetPosition().z,1 };
-					pBullet.radius = 1;
-					Box block;
-					block.center = { sampleBullet->GetPosition().x,sampleBullet->GetPosition().y,sampleBullet->GetPosition().z,1 };
+				sampleEnemy[i]->SetColor({ 1,0,0,1 });
+				hit++;
+			}
 
-					if (Collision::CheckSphere2Box(pBullet, block))
-					{
-						sampleBlock[x][y][z]->SetColor({ 1,0,0,1 });
-					}
-
-					else
-					{
-						sampleBlock[x][y][z]->SetColor({ 0,0.4f,0,1 });
-					}
-				}
+			if (Collision::CheckSphere2Box(pBullet, boss))
+			{
+				sampleBoss->SetColor({ 1,0,0,1 });
+				hitBoss++;
 			}
 		}
+
+		ImGui::Begin("Info");
+		ImGui::SetWindowPos(ImVec2(20, 20), ImGuiCond_::ImGuiCond_FirstUseEver);
+		ImGui::SetWindowSize(ImVec2(300, 200), ImGuiCond_::ImGuiCond_FirstUseEver);
+		ImGui::Text("(%.1f FPS)", ImGui::GetIO().Framerate);
+		ImGui::Text("LSticlRot %.1f", Xinput->GetPadLStickAngle());
+		ImGui::Text("RSticlRot %.1f", Xinput->GetPadRStickAngle());
+		ImGui::Text("cameraPos( %.1f, %.1f, %.1f )", cameraPos.x, cameraPos.y, cameraPos.z);
+		ImGui::Text("num( %.5f, %.5f, %.5f )", num.x, num.y, num.z);
+		ImGui::Text("hit %d", hit);
+		ImGui::Text("hitBoss %d", hitBoss);
+		ImGui::Text("ZE  UP/DOWN");
+		ImGui::Text("AD  LEFT/RIGHT");
+		ImGui::Text("SPACE  SHOT");
+		ImGui::End();
+
+
+		for (int i = 0;i < enemyNum;i++)
+		{
+			sampleEnemy[i]->Update();
+		}
+
+		sampleBoss->Update();
+		sampleBoss->SetPosition(bPos);
+		sampleBoss->SetScale({ 20.0f,20.0f,20.0f });
+		sampleBoss->SetColor({ 1,1,1,1 });
 
 		samplePlayer->SetPosition(pPos);
 		samplePlayer->SetScale({ 0.5f,0.5f,0.5f });
 		samplePlayer->SetColor({ 0.0f,0.0f,0.0f,1.0f });
 		//samplePlayer->Update();
 		samplePlayer->PlayerUpdate(qLocal);
-		camera->FollowingCamera(vUpAxis, vForwardAxis, pPos);
 
 		sampleBullet->SetPosition(pBullPos);
-		sampleBullet->SetScale({ 0.5f,0.5f,0.5f });
+		sampleBullet->SetScale({ 1.0f,1.0f,1.0f });
 		sampleBullet->SetColor({ 0.0f,0.0f,0.0f,1.0f });
 		sampleBullet->Update();
 
@@ -415,7 +517,7 @@ void GameScene::Draw()
 		Sprite::BeforeDraw(cmdList);
 
 		// 背景スプライト描画
-		gameBack->Draw();
+		//gameBack->Draw();
 
 		// スプライト描画後処理
 		Sprite::AfterDraw();
@@ -427,15 +529,28 @@ void GameScene::Draw()
 		Object3d::BeforeDraw(cmdList);
 
 		// 3Dオブジェクト描画
-		for (int k = 0;k < cubeNum;k++)
+		//for (int k = 0;k < cubeNum;k++)
+		//{
+		//	for (int j = 0;j < cubeNum;j++)
+		//	{
+		//		for (int i = 0;i < cubeNum;i++)
+		//		{
+		//			sampleBlock[k][j][i]->Draw();
+		//		}
+		//	}
+		//}
+
+		if (hit < 5)
 		{
-			for (int j = 0;j < cubeNum;j++)
+			for (int i = 0;i < enemyNum;i++)
 			{
-				for (int i = 0;i < cubeNum;i++)
-				{
-					sampleBlock[k][j][i]->Draw();
-				}
+				sampleEnemy[i]->Draw();
 			}
+		}
+
+		else
+		{
+			sampleBoss->Draw();
 		}
 
 		samplePlayer->Draw();
@@ -456,7 +571,7 @@ void GameScene::Draw()
 
 		timer->Draw();
 		
-		//operation->Draw();
+		operation->Draw();
 
 		// デバッグテキストの描画
 		debugText.DrawAll(cmdList);

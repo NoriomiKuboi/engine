@@ -74,6 +74,7 @@ public:
 	virtual void Draw(); // •`‰æ
 	const XMFLOAT3& GetPosition() { return position; } // À•W‚Ìæ“¾
 	const XMFLOAT3& GetRotation() { return rotation; } // ‰ñ“]Šp‚Ìæ“¾
+	const XMFLOAT3& GetScale() { return scale; } // ‰ñ“]Šp‚Ìæ“¾
 	const XMFLOAT4& GetColor() { return color; } // F‚Ìæ“¾
 	void SetPosition(XMFLOAT3 position) { this->position = position; } // À•W‚Ìİ’è
 	void SetRotation(XMFLOAT3 rotation) { this->rotation = rotation; } // ‰ñ“]Šp‚Ìİ’è
