@@ -15,7 +15,6 @@ GameScene::GameScene()
 	random = true;
 	trigger1 = false;
 	trigger2 = false;
-	vec = 0.0f;
 	scene = SceneName::title;
 
 	sec = 0;
@@ -23,9 +22,7 @@ GameScene::GameScene()
 	count = 0;
 
 	speed = 0.1f;
-	rotX = 0.0f;
-	rotY = 0.0f;
-	rotZ = 0.0f;
+	rot = { 0.0f,0.0f,0.0f };
 	qLocal = quaternion(XMFLOAT3(0, 0, 1), 0);
 }
 
@@ -175,14 +172,16 @@ void GameScene::Update()
 {
 	XInputManager* Xinput = XInputManager::GetInstance();
 	const XMFLOAT3& cameraPos = camera->GetEye();
+	XMFLOAT3 num = { 0.0f,0.0f,0.0f };
 
 	ImGui::Begin("Info");
-	//ImGui::SetWindowPos(ImVec2(20, 20), ImGuiCond_::ImGuiCond_FirstUseEver);
-	//ImGui::SetWindowSize(ImVec2(210, 110), ImGuiCond_::ImGuiCond_FirstUseEver);
-	//ImGui::Text("(%.1f FPS)", ImGui::GetIO().Framerate);
-	//ImGui::Text("LSticlRot %.1f", Xinput->GetPadLStickAngle());
-	//ImGui::Text("RSticlRot %.1f", Xinput->GetPadRStickAngle());
-	//ImGui::Text("cameraPos( %.1f, %.1f, %.1f )", cameraPos.x, cameraPos.y, cameraPos.z);
+	ImGui::SetWindowPos(ImVec2(20, 20), ImGuiCond_::ImGuiCond_FirstUseEver);
+	ImGui::SetWindowSize(ImVec2(300, 200), ImGuiCond_::ImGuiCond_FirstUseEver);
+	ImGui::Text("(%.1f FPS)", ImGui::GetIO().Framerate);
+	ImGui::Text("LSticlRot %.1f", Xinput->GetPadLStickAngle());
+	ImGui::Text("RSticlRot %.1f", Xinput->GetPadRStickAngle());
+	ImGui::Text("cameraPos( %.1f, %.1f, %.1f )", cameraPos.x, cameraPos.y, cameraPos.z);
+	ImGui::Text("num( %.5f, %.5f, %.5f )", num.x, num.y, num.z);
 	ImGui::Text("ZE  UP/DOWN");
 	ImGui::Text("AD  LEFT/RIGHT");
 	ImGui::Text("SPACE  SHOT");
@@ -210,14 +209,12 @@ void GameScene::Update()
 
 		blockPos = { 0.0f,0.0f,0.0f };
 		pPos = { 6.5f,6.5f,-5.0f };
-		rotX = 0.0f;
-		rotY = 0.0f;
-		rotZ = 0.0f;
+		rot = { 0.0f,0.0f,0.0f };
+		qLocal = quaternion(XMFLOAT3(0, 0, 1), 0);
 		pBullPos = pPos;
 		random = true;
 		trigger1 = false;
 		trigger2 = false;
-		vec = 0.0f;
 
 		sec = 0;
 		time = 0;
@@ -233,8 +230,6 @@ void GameScene::Update()
 
 	else if (scene == game)
 	{
-		camera->Update();
-
 		if (sec < 3)
 		{
 			time++;
@@ -258,9 +253,9 @@ void GameScene::Update()
 			{
 				for (int z = 0;z < cubeNum;z++)
 				{
-					blockPos.x = float(x) * 1.5f;
-					blockPos.y = float(y) * 1.5f;
-					blockPos.z = float(z) * 1.5f;
+					blockPos.x = float(x) * 3.0f;
+					blockPos.y = float(y) * 3.0f;
+					blockPos.z = float(z) * 3.0f;
 					//blockPos.z = perlin->Perlin(blockPos.x, blockPos.y);
 					//sampleBlock[x][y]->SetScale({ 0.8f,0.8f,0.8f });
 					sampleBlock[x][y][z]->SetScale({ 0.5f,0.5f,0.5f });
@@ -269,69 +264,31 @@ void GameScene::Update()
 			}
 		}
 
-		//if (Xinput->LeftStickX(true) || Xinput->LeftStickX(false) || Xinput->LeftStickY(true) || Xinput->LeftStickY(false))
-		//{
-		//	float LSticlRot = Xinput->GetPadLStickAngle();
-		//	float angle = XMConvertToRadians(LSticlRot);
-		//	pPos.x += 0.3f * cosf(angle);
-		//	pPos.y += 0.3f * sinf(angle);
-		//}
+		rot = { 0.0f,0.0f,0.0f };
 
-		//else if (input->PushKey(DIK_W))
-		//{
-		//	pPos.y += 0.3f;
-		//}
-		//
-		//else if (input->PushKey(DIK_S))
-		//{
-		//	pPos.y -= 0.3f;
-		//}
-		//
-		//else if (input->PushKey(DIK_A))
-		//{
-		//	pPos.x -= 0.3f;
-		//}
-		//
-		//else if (input->PushKey(DIK_D))
-		//{
-		//	pPos.x += 0.3f;
-		//}
-
-		rotX = 0.0f;
-		rotY = 0.0f;
-		rotZ = 0.0f;
-
-		if (input->PushKey(DIK_E)) { rotX -= ROT_UINT; }
-		if (input->PushKey(DIK_Z)) { rotX += ROT_UINT; }
-		if (input->PushKey(DIK_A)) { rotY -= ROT_UINT; }
-		if (input->PushKey(DIK_D)) { rotY += ROT_UINT; }
-
-		if (speed > 0.2f)
+		if (Xinput->LeftStickX(true) || Xinput->LeftStickX(false) || Xinput->LeftStickY(true) || Xinput->LeftStickY(false))
 		{
-			speed += 0.01f;
+			const float adjustRot = 30.0f;
+			float LSticlRot = Xinput->GetPadLStickAngle() + 90.0f;
+			float angle = XMConvertToRadians(LSticlRot);
+			rot.x += cosf(angle) / adjustRot;
+			rot.y += sinf(angle) / adjustRot;
 		}
-		//if (input->PushKey(DIK_W))
-		//{
-		//	speed += 0.01f;
-		//}
-		//
-		//if (input->PushKey(DIK_S))
-		//{
-		//	speed -= 0.01f;
-		//
-		//	if (speed < 0.0f)
-		//	{
-		//		speed = 0.0f;
-		//	}
-		//}
+
+		if (input->PushKey(DIK_E)) { rot.x -= ROT_UINT; }
+		if (input->PushKey(DIK_Z)) { rot.x += ROT_UINT; }
+		if (input->PushKey(DIK_A)) { rot.y -= ROT_UINT; }
+		if (input->PushKey(DIK_D)) { rot.y += ROT_UINT; }
+
+		if (speed > 0.2f) { speed += 0.01f; }
 
 		XMFLOAT3 vSideAxis = getAxis(quaternion(UnitX, qLocal));
 		XMFLOAT3 vUpAxis = getAxis(quaternion(UnitY, qLocal));
 		XMFLOAT3 vForwardAxis = getAxis(quaternion(UnitZ, qLocal));
 
-		Quaternion qRoll = quaternion(vUpAxis, rotY);
-		Quaternion qPitch = quaternion(vSideAxis, rotX);
-		Quaternion qYow = quaternion(vForwardAxis, rotZ);
+		Quaternion qRoll = quaternion(vUpAxis, rot.y);
+		Quaternion qPitch = quaternion(vSideAxis, rot.x);
+		Quaternion qYow = quaternion(vForwardAxis, rot.z);
 
 		qLocal = qRoll * qLocal;
 		qLocal = qPitch * qLocal;
@@ -340,7 +297,6 @@ void GameScene::Update()
 		pPos.x += vForwardAxis.x * speed;
 		pPos.y += vForwardAxis.y * speed;
 		pPos.z += vForwardAxis.z * speed;
-
 
 		for (int x = 0;x < cubeNum;x++)
 		{
@@ -361,15 +317,14 @@ void GameScene::Update()
 
 		if (trigger1 == true)
 		{
-			pBullPos.x += vForwardAxis.x * 0.5f;
-			pBullPos.y += vForwardAxis.y * 0.5f;
-			pBullPos.z += vForwardAxis.z * 0.5f;
+			pBullPos.x += vForwardAxis.x * 2.0f;
+			pBullPos.y += vForwardAxis.y * 2.0f;
+			pBullPos.z += vForwardAxis.z * 2.0f;
 		}
 
 		if (pBullPos.z > 20.0f)
 		{
 			pBullPos = pPos;
-			vec = 0.0f;
 			trigger1 = false;
 			trigger2 = false;
 		}
@@ -416,6 +371,9 @@ void GameScene::Update()
 		light->Update();
 
 		timer->Update();
+
+		//camera->Update();
+		camera->FollowingCamera(vUpAxis, vForwardAxis, pPos);
 
 		operation->SetPosition({ 50.0f,550.0f });
 	}

@@ -133,17 +133,23 @@ void Camera::UpdateProjectionMatrix()
 
 void Camera::FollowingCamera(XMFLOAT3 vUpAxis, XMFLOAT3 vForwardAxis, XMFLOAT3 playerPos)
 {
-	//XMFLOAT3 backVector = { -vForwardAxis.x,-vForwardAxis.y,-vForwardAxis.z };
-	//XMVECTOR vTargetEye = { 0.0f, 0.0f, -distance, 1.0f };
-	//XMVECTOR vUp = { vUpAxis.x, vUpAxis.y, vUpAxis.z, 0.0f };
-	//
-	//backVector = { backVector.x * distance, backVector.y * distance ,backVector.z * distance };
-	//
-	//XMVECTOR cameraPos = vTargetEye ;
-	//
-	//matView = XMMatrixLookAtLH(cameraPos, vTargetEye, vUp);
-	//
-	//matViewProjection = matView * matViewProjection;
+	XMFLOAT3 targetPos = playerPos;
+	XMFLOAT3 backVector = { -vForwardAxis.x,-vForwardAxis.y,-vForwardAxis.z };
+	float backVectorLength = sqrtf(pow(vForwardAxis.x, 2) + pow(vForwardAxis.y, 2) + pow(vForwardAxis.z, 2));
+	float backVectorNormalize = 1 / backVectorLength;
+	vForwardAxis.x *= backVectorNormalize;
+	vForwardAxis.y *= backVectorNormalize;
+	vForwardAxis.z *= backVectorNormalize;
+
+	backVector = { -vForwardAxis.x * distance,-vForwardAxis.y * distance,-vForwardAxis.z * distance };
+
+	XMVECTOR cameraPos = XMLoadFloat3(&targetPos) + XMLoadFloat3(&backVector);
+
+	matView = XMMatrixLookAtLH(cameraPos, XMLoadFloat3(&targetPos), XMLoadFloat3(&vUpAxis));
+
+	matViewProjection = matView * matProjection;
+
+	Update();
 }
 
 void Camera::MoveEyeVector(const XMFLOAT3& move)

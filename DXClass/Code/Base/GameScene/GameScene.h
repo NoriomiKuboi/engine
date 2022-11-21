@@ -84,7 +84,7 @@ private:
 	XMFLOAT3 pPos;
 	XMFLOAT3 pBullPos;
 	const float g = 9.8f / 60.0f;
-	float vec;
+	const float vec = 2.0f;
 	bool trigger1;
 	bool trigger2;
 
@@ -105,9 +105,7 @@ private:
 	int count;
 
 	float speed;
-	float rotX;
-	float rotY;
-	float rotZ;
+	XMFLOAT3 rot;
 	Quaternion qLocal;
 	const float ROT_UINT = 0.03f;
 	const XMFLOAT3 UnitX = { 1.0f, 0.0f, 0.0f };
