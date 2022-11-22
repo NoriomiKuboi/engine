@@ -73,7 +73,8 @@ private:
 
 	// 3dObj : FBX
 	static const int cubeNum = 10; // c‰¡cube‚Ì”
-	static const int enemyNum = 10; // c‰¡cube‚Ì”
+	static const int enemyNum = 10; // mobenemy‚Ì”
+	static const int pBulletNum = 10; // player‚Ì’e‚Ì”
 	std::unique_ptr<Model> modelSampleCube;
 	std::unique_ptr<Model> modelSampleBullet;
 	std::unique_ptr<Model> modelFbx;
@@ -81,20 +82,33 @@ private:
 	std::unique_ptr<Object3d> sampleBlock[cubeNum][cubeNum][cubeNum];
 	std::unique_ptr<Object3d> sampleEnemy[enemyNum];
 	std::unique_ptr<Object3d> sampleBoss;
-	std::unique_ptr<Object3d> sampleBullet;
+	std::unique_ptr<Object3d> sampleBullet[pBulletNum];
 	std::unique_ptr<ObjectFbx> objFbx;
-
-	XMFLOAT3 pPos;
-	XMFLOAT3 pBullPos;
-	XMFLOAT3 ePos[enemyNum];
-	XMFLOAT3 bPos;
-	const float vec = 2.0f;
-	bool trigger1;
-	bool trigger2;
-	bool randNum;
 
 	// ƒ‰ƒCƒg
 	Light* light = nullptr;
+
+	// playerŠÖŒW•Ï”
+	XMFLOAT3 pPos; // player‚ÌÀ•W
+	XMFLOAT3 pBullPos[pBulletNum]; // player‚Ì’e‚ÌÀ•W
+	XMFLOAT3 rot; // player‚Ì‰ñ“]
+	Quaternion qLocal; // p¨—pƒNƒH[ƒ^ƒjƒIƒ“
+	int pBulletTrigger[pBulletNum]; // ’e‚Ì”­ËƒgƒŠƒK[
+	float speed; // player‚ÌˆÚ“®‘¬“x
+	int playerCount; // ’e‚Ì”­ËŠÔŠu
+	int pBulletAlive[pBulletNum]; // ’e‚Ì¶‘¶ŠÔ
+	const float ROT_UINT = 0.05f; // ‰ñ“]—Ê
+	const float vec = 2.0f; // ’e‚Ì‘¬“x
+	const XMFLOAT3 UnitX = { 1.0f, 0.0f, 0.0f }; // ²ŠÖŒW‚Ì’è”
+	const XMFLOAT3 UnitY = { 0.0f, 1.0f, 0.0f }; // ²ŠÖŒW‚Ì’è”
+	const XMFLOAT3 UnitZ = { 0.0f, 0.0f, 1.0f }; // ²ŠÖŒW‚Ì’è”
+
+	// enemyŠÖŒW•Ï”
+	XMFLOAT3 ePos[enemyNum]; // mobenemy‚ÌÀ•W
+	XMFLOAT3 bPos; // boss‚ÌÀ•W
+	bool randNum; // mobenemy‚ÌÀ•W‚ğ—”¶¬
+	int hit; // mobenemy‚É“–‚½‚Á‚½”
+	int hitBoss; // boss‚É“–‚½‚Á‚½”
 
 	// ƒmƒCƒY
 	Noise* perlin = nullptr;
@@ -104,19 +118,4 @@ private:
 	int scene;
 
 	Timer* timer = nullptr;
-
-	int sec;
-	int time;
-	int count;
-
-	int hit;
-	int hitBoss;
-
-	float speed;
-	XMFLOAT3 rot;
-	Quaternion qLocal;
-	const float ROT_UINT = 0.05f;
-	const XMFLOAT3 UnitX = { 1.0f, 0.0f, 0.0f };
-	const XMFLOAT3 UnitY = { 0.0f, 1.0f, 0.0f };
-	const XMFLOAT3 UnitZ = { 0.0f, 0.0f, 1.0f };
 };

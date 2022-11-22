@@ -10,30 +10,35 @@ using namespace DirectX;
 
 GameScene::GameScene()
 {
-	blockPos = { 0.0f,0.0f,0.0f };
-	pPos = { 13.5f,13.5f,-5.0f };
+	// player関係変数
+	pPos = { 13.5f,13.5f,-5.0f }; // playerの座標
+	rot = { 0.0f,0.0f,0.0f }; // playerの回転
+	qLocal = quaternion(XMFLOAT3(0, 0, 1), 0); // 姿勢用クォータニオン
+	for (int i = 0;i < pBulletNum;i++)
+	{
+		pBullPos[i] = pPos; // playerの弾の座標
+		pBulletTrigger[i] = { 0 }; // 弾の発射トリガー
+		pBulletAlive[i] = 0;  // 弾の生存時間
+	}
+	speed = 0.1f; // playerの移動速度
+	playerCount = 0; // 弾の発射間隔
+
+	// enemy関係変数
 	for (int i = 0;i < enemyNum;i++)
 	{
-		ePos[i] = { 0.0f,0.0f,0.0f };
+		ePos[i] = { 0.0f,0.0f,0.0f }; // mobenemyの座標
 	}
-	bPos = { 30.0f,30.0f,30.0f };
-	pBullPos = pPos;
+	bPos = { 30.0f,30.0f,30.0f }; // bossの座標
+	randNum = true; // mobenemyの座標を乱数生成
+	hit = 0; // mobenemyに当たった数
+	hitBoss = 0; // bossに当たった数
+
+	// ノイズ
+	blockPos = { 0.0f,0.0f,0.0f };
 	random = true;
-	trigger1 = false;
-	trigger2 = false;
-	randNum = true;
+
+	// シーン関係
 	scene = SceneName::title;
-
-	sec = 0;
-	time = 0;
-	count = 0;
-
-	hit = 0;
-	hitBoss = 0;
-
-	speed = 0.1f;
-	rot = { 0.0f,0.0f,0.0f };
-	qLocal = quaternion(XMFLOAT3(0, 0, 1), 0);
 }
 
 GameScene::~GameScene()
@@ -127,28 +132,21 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	modelSampleBullet = Model::CreateFromOBJ("bulletSample");
 
 	// 3Dオブジェクト生成
-	//for (int k = 0;k < cubeNum;k++)
-	//{
-	//	for (int j = 0;j < cubeNum;j++)
-	//	{
-	//		for (int i = 0;i < cubeNum;i++)
-	//		{
-	//			sampleBlock[k][j][i] = std::make_unique<Object3d>();
-	//			sampleBlock[k][j][i] = Object3d::Create(modelSampleCube.get());
-	//		}
-	//	}
-	//}
-
 	for (int i = 0;i < enemyNum;i++)
 	{
 		sampleEnemy[i] = std::make_unique<Object3d>();
 		sampleEnemy[i] = Object3d::Create(modelSampleCube.get());
 	}
 
+	for (int i = 0;i < pBulletNum;i++)
+	{
+		sampleBullet[i] = std::make_unique<Object3d>();
+		sampleBullet[i] = Object3d::Create(modelSampleBullet.get());
+	}
+
 	samplePlayer = std::make_unique<Object3d>();
 	samplePlayer = Object3d::Create(modelSampleCube.get());
-	sampleBullet = std::make_unique<Object3d>();
-	sampleBullet = Object3d::Create(modelSampleBullet.get());
+
 	sampleBoss = std::make_unique<Object3d>();
 	sampleBoss = Object3d::Create(modelSampleCube.get());
 
@@ -163,7 +161,6 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	//audio->SoundPlayWava(sound,true);
 
 	// モデル名を指定してファイル読み込み
-	//FbxLoader::GetInstance()->LoadModelFromFile("cube");
 	modelFbx = std::make_unique<Model>();
 	modelFbx = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 
@@ -210,42 +207,39 @@ void GameScene::Update()
 	if (scene == title)
 	{
 		camera->SetTarget({ 6.5f, 6.5f, 0 });
-		camera->SetDistance(20.0f);
+		camera->SetDistance(15.0f);
 
-		blockPos = { 0.0f,0.0f,0.0f };
-		pPos = { 13.5f,13.5f,-5.0f };
+		// player関係変数
+		pPos = { 13.5f,13.5f,-5.0f }; // playerの座標
+		rot = { 0.0f,0.0f,0.0f }; // playerの回転
+		qLocal = quaternion(XMFLOAT3(0, 0, 1), 0); // 姿勢用クォータニオン
+		for (int i = 0;i < pBulletNum;i++)
+		{
+			pBullPos[i] = pPos; // playerの弾の座標
+			pBulletTrigger[i] = { 0 }; // 弾の発射トリガー
+			pBulletAlive[i] = { 0 }; // 弾の生存時間
+		}
+		speed = 0.1f; // playerの移動速度
+		playerCount = 0; // 弾の発射間隔
 
-		rot = { 0.0f,0.0f,0.0f };
-		qLocal = quaternion(XMFLOAT3(0, 0, 1), 0);
-		pBullPos = pPos;
-		//for (int x = 0; x < cubeNum; x++)
-		//{
-		//	for (int y = 0; y < cubeNum; y++)
-		//	{
-		//		for (int z = 0;z < cubeNum;z++)
-		//		{
-		//			sampleBlock[x][y][z]->SetColor({ 1,1,1,1 });
-		//		}
-		//	}
-		//}
+		// enemy関係変数
 		for (int i = 0;i < enemyNum;i++)
 		{
 			sampleEnemy[i]->SetColor({ 1,1,1,1 });
-			ePos[i] = { 0.0f,0.0f,0.0f };
+			ePos[i] = { 0.0f,0.0f,0.0f }; // mobenemyの座標
 		}
+		bPos = { 30.0f,30.0f,30.0f }; // bossの座標
+		randNum = true; // mobenemyの座標を乱数生成
+		hit = 0; // mobenemyに当たった数
+		hitBoss = 0; // bossに当たった数
 		sampleBoss->SetColor({ 1,1,1,1 });
-		bPos = { 30.0f,30.0f,30.0f };
+
+		// ノイズ
+		blockPos = { 0.0f,0.0f,0.0f };
 		random = true;
-		randNum = true;
-		trigger1 = false;
-		trigger2 = false;
 
-		sec = 0;
-		time = 0;
-		count = 0;
-
-		hit = 0;
-		hitBoss = 0.0f;
+		// シーン関係
+		scene = SceneName::title;
 
 		timer->Reset();
 
@@ -258,9 +252,9 @@ void GameScene::Update()
 		{
 			if (randNum == true)
 			{
-				ePos[i].x = rand() % 10;
-				ePos[i].y = rand() % 10;
-				ePos[i].z = rand() % 10;
+				ePos[i].x = rand() % 30;
+				ePos[i].y = rand() % 30;
+				ePos[i].z = rand() % 30;
 			}
 		}
 
@@ -268,53 +262,23 @@ void GameScene::Update()
 
 	else if (scene == game)
 	{
-		randNum = false;
-		if (sec < 3)
-		{
-			time++;
-		}
+		//if (hitBoss > 100)
+		//{
+		//	scene = SceneName::end;
+		//}
 
-		if (sec == 3)
-		{
-			count++;
-		}
-
-		if (count == 70)
-		{
-			//scene = SceneName::end;
-		}
-
-		if (hitBoss > 100)
+		if (input->TriggerKey(DIK_BACKSPACE))
 		{
 			scene = SceneName::end;
 		}
 
-		sec = time / (35 * 10) % 6;
-
-		//for (int x = 0; x < cubeNum; x++)
-		//{
-		//	for (int y = 0; y < cubeNum; y++)
-		//	{
-		//		for (int z = 0;z < cubeNum;z++)
-		//		{
-		//			blockPos.x = float(x) * 3.0f;
-		//			blockPos.y = float(y) * 3.0f;
-		//			blockPos.z = float(z) * 3.0f;
-		//			//blockPos.z = perlin->Perlin(blockPos.x, blockPos.y);
-		//			//sampleBlock[x][y]->SetScale({ 0.8f,0.8f,0.8f });
-		//			sampleBlock[x][y][z]->SetScale({ 0.5f,0.5f,0.5f });
-		//			sampleBlock[x][y][z]->SetPosition(blockPos);
-		//		}
-		//	}
-		//}
-
 		for (int i = 0;i < enemyNum;i++)
 		{
-			sampleEnemy[i]->SetScale({ 0.5f,0.5f,0.5f });
-			sampleEnemy[i]->SetPosition({ePos[i]});
+			sampleEnemy[i]->SetScale({ 1.5f,1.5f,1.5f });
+			sampleEnemy[i]->SetPosition({ ePos[i] });
 		}
 
-		sampleBoss->SetScale({ 20.0f,20.0f,20.0f });
+		sampleBoss->SetScale({ 15.0f,15.0f,15.0f });
 		sampleBoss->SetPosition({ bPos });
 
 		rot = { 0.0f,0.0f,0.0f };
@@ -351,83 +315,63 @@ void GameScene::Update()
 		pPos.y += vForwardAxis.y * speed;
 		pPos.z += vForwardAxis.z * speed;
 
-		//for (int x = 0;x < cubeNum;x++)
-		//{
-		//	for (int y = 0;y < cubeNum;y++)
-		//	{
-		//		for (int z = 0;z < cubeNum;z++)
-		//		{
-		//			sampleBlock[x][y][z]->Update();
-		//		}
-		//	}
-		//}
+		playerCount++;
 
-		if (Xinput->TriggerButton(XInputManager::PUD_BUTTON::PAD_RT) || input->TriggerKey(DIK_SPACE))
+		for (int i = 0;i < pBulletNum;i++)
 		{
-			trigger1 = true;
-			pBullPos = pPos;
-		}
+			if (Xinput->TriggerButton(XInputManager::PUD_BUTTON::PAD_RT) || input->TriggerKey(DIK_SPACE))
+			{
+				if (playerCount >= 10 && pBulletTrigger[i] == 0)
+				{
+					pBulletTrigger[i] = 1;
+					pBullPos[i] = pPos;
+					playerCount = 0;
+				}
+			}
 
-		if (trigger1 == true)
-		{
-			pBullPos.x += vForwardAxis.x * 2.0f;
-			pBullPos.y += vForwardAxis.y * 2.0f;
-			pBullPos.z += vForwardAxis.z * 2.0f;
-		}
+			if (pBulletTrigger[i] == 1)
+			{
+				pBulletAlive[i]++;
+				pBullPos[i].x += vForwardAxis.x * vec;
+				pBullPos[i].y += vForwardAxis.y * vec;
+				pBullPos[i].z += vForwardAxis.z * vec;
+				sampleBullet[i]->SetPosition(pBullPos[i]);
 
-		if (pBullPos.z > 20.0f)
-		{
-			pBullPos = {10000.0f,10000.0f,10000.0f};
-			trigger1 = false;
-			trigger2 = false;
+				if (pBulletAlive[i] >= 50)
+				{
+ 					pBulletTrigger[i] = 0;
+					pBulletAlive[i] = 0;
+				}
+			}
 		}
-
-		//for (int x = 0;x < cubeNum;x++)
-		//{
-		//	for (int y = 0;y < cubeNum;y++)
-		//	{
-		//		for (int z = 0;z < cubeNum;z++)
-		//		{
-		//			Sphere pBullet;
-		//			pBullet.center = { sampleBullet->GetPosition().x,sampleBullet->GetPosition().y,sampleBullet->GetPosition().z,1 };
-		//			pBullet.radius = 1.5f;
-		//			Box block;
-		//			block.center = { sampleBlock[x][y][z]->GetPosition().x,sampleBlock[x][y][z]->GetPosition().y,sampleBlock[x][y][z]->GetPosition().z,1 };
-		//			block.scale = { sampleBlock[x][y][z]->GetScale().x, sampleBlock[x][y][z]->GetScale().y, sampleBlock[x][y][z]->GetScale().z };
-		//
-		//			if (Collision::CheckSphere2Box(pBullet, block))
-		//			{
-		//				sampleBlock[x][y][z]->SetColor({ 1,0,0,1 });
-		//				hit++;
-		//			}
-		//		}
-		//	}
-		//}
 
 		for (int i = 0;i < enemyNum;i++)
 		{
-			Sphere pBullet;
-			pBullet.center = { sampleBullet->GetPosition().x,sampleBullet->GetPosition().y,sampleBullet->GetPosition().z,1 };
-			pBullet.radius = 2.0;
+			Box mobEnemy;
+			mobEnemy.center = { sampleEnemy[i]->GetPosition().x,sampleEnemy[i]->GetPosition().y,sampleEnemy[i]->GetPosition().z,1 };
+			mobEnemy.scale = { sampleEnemy[i]->GetScale().x, sampleEnemy[i]->GetScale().y, sampleEnemy[i]->GetScale().z };
 
-			Box block;
-			block.center = { sampleEnemy[i]->GetPosition().x,sampleEnemy[i]->GetPosition().y,sampleEnemy[i]->GetPosition().z,1 };
-			block.scale = { sampleEnemy[i]->GetScale().x, sampleEnemy[i]->GetScale().y, sampleEnemy[i]->GetScale().z };
+			Box bossEnemy;
+			bossEnemy.center = { sampleBoss->GetPosition().x,sampleBoss->GetPosition().y,sampleBoss->GetPosition().z,1 };
+			bossEnemy.scale = { sampleBoss->GetScale().x, sampleBoss->GetScale().y, sampleBoss->GetScale().z };
 
-			Box boss;
-			boss.center = { sampleBoss->GetPosition().x,sampleBoss->GetPosition().y,sampleBoss->GetPosition().z,1 };
-			boss.scale = { sampleBoss->GetScale().x, sampleBoss->GetScale().y, sampleBoss->GetScale().z };
-
-			if (Collision::CheckSphere2Box(pBullet, block))
+			for (int j = 0;j < pBulletNum;j++)
 			{
-				sampleEnemy[i]->SetColor({ 1,0,0,1 });
-				hit++;
-			}
+				Sphere pBullet;
+				pBullet.center = { sampleBullet[j]->GetPosition().x,sampleBullet[j]->GetPosition().y,sampleBullet[j]->GetPosition().z,1 };
+				pBullet.radius = 2.0f;
 
-			if (Collision::CheckSphere2Box(pBullet, boss))
-			{
-				sampleBoss->SetColor({ 1,0,0,1 });
-				hitBoss++;
+				if (Collision::CheckSphere2Box(pBullet, mobEnemy))
+				{
+					sampleEnemy[i]->SetColor({ 1,0,0,1 });
+					hit++;
+				}
+
+				//if (Collision::CheckSphere2Box(pBullet, bossEnemy))
+				//{
+				//	sampleBoss->SetColor({ 1,0,0,1 });
+				//	hitBoss++;
+				//}
 			}
 		}
 
@@ -446,7 +390,6 @@ void GameScene::Update()
 		ImGui::Text("SPACE  SHOT");
 		ImGui::End();
 
-
 		for (int i = 0;i < enemyNum;i++)
 		{
 			sampleEnemy[i]->Update();
@@ -460,21 +403,21 @@ void GameScene::Update()
 		samplePlayer->SetPosition(pPos);
 		samplePlayer->SetScale({ 0.5f,0.5f,0.5f });
 		samplePlayer->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-		//samplePlayer->Update();
 		samplePlayer->PlayerUpdate(qLocal);
 
-		sampleBullet->SetPosition(pBullPos);
-		sampleBullet->SetScale({ 1.0f,1.0f,1.0f });
-		sampleBullet->SetColor({ 0.0f,0.0f,0.0f,1.0f });
-		sampleBullet->Update();
+		for (int i = 0;i < pBulletNum;i++)
+		{
+			sampleBullet[i]->SetScale({ 1.0f,1.0f,1.0f });
+			sampleBullet[i]->SetColor({ 0.0f,0.0f,0.0f,1.0f });
+			sampleBullet[i]->Update();
+		}
 
 		objFbx->Update();
 
 		light->Update();
 
-		timer->Update();
+		//timer->Update();
 
-		//camera->Update();
 		camera->FollowingCamera(vUpAxis, vForwardAxis, pPos);
 
 		operation->SetPosition({ 50.0f,550.0f });
@@ -529,17 +472,6 @@ void GameScene::Draw()
 		Object3d::BeforeDraw(cmdList);
 
 		// 3Dオブジェクト描画
-		//for (int k = 0;k < cubeNum;k++)
-		//{
-		//	for (int j = 0;j < cubeNum;j++)
-		//	{
-		//		for (int i = 0;i < cubeNum;i++)
-		//		{
-		//			sampleBlock[k][j][i]->Draw();
-		//		}
-		//	}
-		//}
-
 		if (hit < 5)
 		{
 			for (int i = 0;i < enemyNum;i++)
@@ -554,14 +486,17 @@ void GameScene::Draw()
 		}
 
 		samplePlayer->Draw();
-		if (trigger1 == true)
+
+		for (int i = 0;i < pBulletNum;i++)
 		{
-			sampleBullet->Draw();
+			if (pBulletTrigger[i] == 1)
+			{
+				sampleBullet[i]->Draw();
+			}
 		}
 
 		// 3Dオブジェクトの描画後処理
 		Object3d::AfterDraw();
-		//objFbx->Draw(cmdList);
 
 		// パーティクルの描画
 		//particleMan->Draw(cmdList);
@@ -569,7 +504,7 @@ void GameScene::Draw()
 		// 前景スプライト描画前処理
 		Sprite::BeforeDraw(cmdList);
 
-		timer->Draw();
+		//timer->Draw();
 		
 		operation->Draw();
 
