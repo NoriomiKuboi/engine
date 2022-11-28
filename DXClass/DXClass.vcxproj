@@ -79,6 +79,7 @@
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Code\Game\Noise;$(SolutionDir)Code\Base\XInputManager;$(SolutionDir)Code\Base\WindowApp;$(SolutionDir)Code\Base\Vec;$(SolutionDir)Code\Base\SafeDelete;$(SolutionDir)Code\Base\Sprite;$(SolutionDir)Code\Base\PostEffect;$(SolutionDir)Code\Base\ParticleManager;$(SolutionDir)Code\Base\ObjectFbx;$(SolutionDir)Code\Base\Object3d;$(SolutionDir)Code\Base\Model;$(SolutionDir)Code\Base\Mesh;$(SolutionDir)Code\Base\Material;$(SolutionDir)Code\Base\Light;$(SolutionDir)Code\Base\Input;$(SolutionDir)Code\Base\ImguiManager;$(SolutionDir)Code\Base\GameScene;$(SolutionDir)Code\Base\FbxLoader;$(SolutionDir)Code\Base\DirectXCommon;$(SolutionDir)Code\Base\DebugText;$(SolutionDir)Code\Base\Collision;$(SolutionDir)Code\Base\Camera;$(SolutionDir)Code\Base\Audio;$(SolutionDir)Code\Game;$(SolutionDir)Code\Base;$(SolutionDir)DirectXTex;$(SolutionDir);$(SolutionDir)imgui</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <Optimization>MinSpace</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

@@ -1,5 +1,6 @@
 #pragma once
 #include "SafeDelete.h"
+#include "WindowApp.h"
 #include "DirectXCommon.h"
 #include <DirectXMath.h>
 #include "Input.h"
@@ -46,12 +47,14 @@ public:
 	GameScene();
 	~GameScene();
 
-	void Init(DirectXCommon* dxCommon, Input* input, Audio* audio); // 初期化
+	void Init(WindowApp* win, DirectXCommon* dxCommon, Input* input, Audio* audio); // 初期化
 	void Update(); // 更新
 	void Draw(); // 描画
 	void CreateParticles(); // パーティクル生成
+	void Reticle();
 
 private:
+	WindowApp* win = nullptr;
 	DirectXCommon* dxCommon = nullptr;
 	Input* input = nullptr;
 	Audio* audio = nullptr;
@@ -67,6 +70,7 @@ private:
 	Sprite* gameBack = nullptr;
 	Sprite* endBack = nullptr;
 	Sprite* operation = nullptr;
+	Sprite* reticle = nullptr;
 
 	// パーティクル
 	ParticleManager* particleMan = nullptr;
@@ -81,6 +85,7 @@ private:
 	std::unique_ptr<Object3d> samplePlayer;
 	std::unique_ptr<Object3d> sampleBlock[cubeNum][cubeNum][cubeNum];
 	std::unique_ptr<Object3d> sampleEnemy[enemyNum];
+	std::unique_ptr<Object3d> sampleBulletEnemy[enemyNum];
 	std::unique_ptr<Object3d> sampleBoss;
 	std::unique_ptr<Object3d> sampleBullet[pBulletNum];
 	std::unique_ptr<ObjectFbx> objFbx;
@@ -118,4 +123,12 @@ private:
 	int scene;
 
 	Timer* timer = nullptr;
+
+	XMFLOAT2 reticlePos;
+
+	XMFLOAT3 move;
+
+	int count;
+
+	XMFLOAT3 pos[enemyNum];
 };

@@ -40,7 +40,8 @@ void WindowApp::WindowCreate()
 		nullptr); // オプション
 
 	// ウィンドウ表示
-	ShowWindow(hwnd, SW_SHOWMAXIMIZED);
+	//ShowWindow(hwnd, SW_SHOWMAXIMIZED); // フルスクリーン
+	ShowWindow(hwnd, SW_SHOWNORMAL); // ウィンドウモード
 }
 
 void WindowApp::WindowDelete()

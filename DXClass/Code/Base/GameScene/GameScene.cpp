@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include "ObjectFbx.h"
+#include <iostream>
 
 using namespace DirectX;
 
@@ -27,6 +28,8 @@ GameScene::GameScene()
 	for (int i = 0;i < enemyNum;i++)
 	{
 		ePos[i] = { 0.0f,0.0f,0.0f }; // mobenemyの座標
+
+		pos[i] = { 0.0f,0.0f,0.0f };
 	}
 	bPos = { 30.0f,30.0f,30.0f }; // bossの座標
 	randNum = true; // mobenemyの座標を乱数生成
@@ -39,6 +42,13 @@ GameScene::GameScene()
 
 	// シーン関係
 	scene = SceneName::title;
+
+	reticlePos = { 1280 / 2 - 32, 720 / 2 - 32 };
+
+	move = { 0.0f,0.0f,0.0f };
+
+	count = 0;
+
 }
 
 GameScene::~GameScene()
@@ -51,16 +61,19 @@ GameScene::~GameScene()
 	safe_delete(light);
 	safe_delete(perlin);
 	safe_delete(operation);
+	safe_delete(reticle);
 	safe_delete(timer);
 }
 
-void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
+void GameScene::Init(WindowApp* win, DirectXCommon* dxCommon, Input* input, Audio* audio)
 {
 	// nullptrチェック
+	assert(win);
 	assert(dxCommon);
 	assert(input);
 	assert(audio);
 
+	this->win = win;
 	this->dxCommon = dxCommon;
 	this->input = input;
 	this->audio = audio;
@@ -115,12 +128,19 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 		return;
 	}
 
+	if (!Sprite::LoadTexture(16, L"Resources/reticle.png"))
+	{
+		assert(0);
+		return;
+	}
+
 	// 背景スプライト生成
 	sprite1 = Sprite::Create(1, { 0.0f,0.0f });
 	titleBack = Sprite::Create(2, { 0.0f,0.0f });
 	gameBack = Sprite::Create(3, { 0.0f,0.0f });
 	endBack = Sprite::Create(4, { 0.0f,0.0f });
 	operation = Sprite::Create(5, { 0.0f,0.0f });
+	reticle = Sprite::Create(16, { 0.0f,0.0f });
 
 	// パーティクルマネージャ生成
 	particleMan = ParticleManager::Create(dxCommon->GetDev(), camera);
@@ -136,6 +156,8 @@ void GameScene::Init(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	{
 		sampleEnemy[i] = std::make_unique<Object3d>();
 		sampleEnemy[i] = Object3d::Create(modelSampleCube.get());
+		sampleBulletEnemy[i] = std::make_unique<Object3d>();
+		sampleBulletEnemy[i] = Object3d::Create(modelSampleCube.get());
 	}
 
 	for (int i = 0;i < pBulletNum;i++)
@@ -227,6 +249,7 @@ void GameScene::Update()
 		{
 			sampleEnemy[i]->SetColor({ 1,1,1,1 });
 			ePos[i] = { 0.0f,0.0f,0.0f }; // mobenemyの座標
+			pos[i] = ePos[i];
 		}
 		bPos = { 30.0f,30.0f,30.0f }; // bossの座標
 		randNum = true; // mobenemyの座標を乱数生成
@@ -241,7 +264,13 @@ void GameScene::Update()
 		// シーン関係
 		scene = SceneName::title;
 
+		reticlePos = { 1280 / 2 - 32, 720 / 2 - 32 };
+
 		timer->Reset();
+
+		move = { 0.0f,0.0f,0.0f };
+
+		count = 0;
 
 		if (Xinput->TriggerButton(XInputManager::PUD_BUTTON::PAD_A) || input->TriggerKey(DIK_RETURN))
 		{
@@ -262,24 +291,65 @@ void GameScene::Update()
 
 	else if (scene == game)
 	{
-		//if (hitBoss > 100)
-		//{
-		//	scene = SceneName::end;
-		//}
+		if (hitBoss > 1)
+		{
+			scene = SceneName::end;
+		}
 
 		if (input->TriggerKey(DIK_BACKSPACE))
 		{
 			scene = SceneName::end;
 		}
 
-		for (int i = 0;i < enemyNum;i++)
-		{
-			sampleEnemy[i]->SetScale({ 1.5f,1.5f,1.5f });
-			sampleEnemy[i]->SetPosition({ ePos[i] });
+		ImGui::Begin("Info");
+		ImGui::SetWindowPos(ImVec2(20, 20), ImGuiCond_::ImGuiCond_FirstUseEver);
+		ImGui::SetWindowSize(ImVec2(300, 200), ImGuiCond_::ImGuiCond_FirstUseEver);
+		ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
+		//ImGui::Text("LSticlRot %.1f", Xinput->GetPadLStickAngle());
+		//ImGui::Text("RSticlRot %.1f", Xinput->GetPadRStickAngle());
+		//ImGui::Text("cameraPos( %.1f, %.1f, %.1f )", cameraPos.x, cameraPos.y, cameraPos.z);
+		//ImGui::Text("ScreenPos( %.1d, %.1d )", mousePos.x, mousePos.y);
+		//ImGui::Text("PosNear( %.1f, %.1f, %.1f )", posNear.x, posNear.y, posNear.z);
+		//ImGui::Text("PosFar( %.1f, %.1f, %.1f )", posFar.x, posFar.y, posFar.z);
+		ImGui::Text("hit %d", hit);
+		ImGui::Text("hitBoss %d", hitBoss);
+		//ImGui::Text("reticlePos( %.1f, %.1f )", reticlePos.x, reticlePos.y);
+		//ImGui::Text("translation( %.1f, %.1f, %.1f )", translation.x, translation.y, translation.z);
+		ImGui::Text("move( %.2f, %.2f, %.2f )", move.x, move.y, move.z);
+		ImGui::Text("count %d", count);
+		ImGui::End();
+
+		count++;
+
+		const float num = 0.05f;
+
+		if (count < 50) {
+			move.x += num;
 		}
 
-		sampleBoss->SetScale({ 15.0f,15.0f,15.0f });
-		sampleBoss->SetPosition({ bPos });
+		if (count >= 50) {
+			move.x -= num;
+		}
+
+		if (count > 100) {
+			count = 0;
+		}
+
+
+		for (int i = 0;i < enemyNum;i++) {
+			if (count == 0) {
+				pos[i] = ePos[i];
+			}
+
+			if (count < 100) {
+				pos[i].z -= 1.0f;
+			}
+
+			sampleEnemy[i]->SetScale({ 1.0f,1.0f,1.0f });
+			sampleEnemy[i]->SetPosition({ ePos[i].x + move.x, ePos[i].y + move.y , ePos[i].z + move.z });
+			sampleBulletEnemy[i]->SetScale({ 0.3f,0.3f,0.3f });
+			sampleBulletEnemy[i]->SetPosition({ pos[i] });
+		}
 
 		rot = { 0.0f,0.0f,0.0f };
 
@@ -343,62 +413,57 @@ void GameScene::Update()
 					pBulletAlive[i] = 0;
 				}
 			}
-		}
 
-		for (int i = 0;i < enemyNum;i++)
-		{
-			Box mobEnemy;
-			mobEnemy.center = { sampleEnemy[i]->GetPosition().x,sampleEnemy[i]->GetPosition().y,sampleEnemy[i]->GetPosition().z,1 };
-			mobEnemy.scale = { sampleEnemy[i]->GetScale().x, sampleEnemy[i]->GetScale().y, sampleEnemy[i]->GetScale().z };
-
-			Box bossEnemy;
-			bossEnemy.center = { sampleBoss->GetPosition().x,sampleBoss->GetPosition().y,sampleBoss->GetPosition().z,1 };
-			bossEnemy.scale = { sampleBoss->GetScale().x, sampleBoss->GetScale().y, sampleBoss->GetScale().z };
-
-			for (int j = 0;j < pBulletNum;j++)
+			Sphere pBullet;
+			pBullet.center = { sampleBullet[i]->GetPosition().x,sampleBullet[i]->GetPosition().y,sampleBullet[i]->GetPosition().z,1 };
+			pBullet.radius = 2.0f;
+			
+			for (int j = 0;j < enemyNum;j++)
 			{
-				Sphere pBullet;
-				pBullet.center = { sampleBullet[j]->GetPosition().x,sampleBullet[j]->GetPosition().y,sampleBullet[j]->GetPosition().z,1 };
-				pBullet.radius = 2.0f;
+				Box mobEnemy;
+				mobEnemy.center = { sampleEnemy[j]->GetPosition().x,sampleEnemy[j]->GetPosition().y,sampleEnemy[j]->GetPosition().z,1 };
+				mobEnemy.scale = { sampleEnemy[j]->GetScale().x, sampleEnemy[j]->GetScale().y, sampleEnemy[j]->GetScale().z };
 
+				Box enemyBullet;
+				enemyBullet.center = { sampleBulletEnemy[j]->GetPosition().x,sampleBulletEnemy[j]->GetPosition().y,sampleBulletEnemy[j]->GetPosition().z,1 };
+				enemyBullet.scale = { sampleBulletEnemy[j]->GetScale().x, sampleBulletEnemy[j]->GetScale().y, sampleBulletEnemy[j]->GetScale().z };
+			
+				Box bossEnemy;
+				bossEnemy.center = { sampleBoss->GetPosition().x,sampleBoss->GetPosition().y,sampleBoss->GetPosition().z,1 };
+				bossEnemy.scale = { sampleBoss->GetScale().x, sampleBoss->GetScale().y, sampleBoss->GetScale().z };
+			
 				if (Collision::CheckSphere2Box(pBullet, mobEnemy))
 				{
-					sampleEnemy[i]->SetColor({ 1,0,0,1 });
+					sampleEnemy[j]->SetColor({ 1,0,0,1 });
 					hit++;
 				}
 
-				//if (Collision::CheckSphere2Box(pBullet, bossEnemy))
-				//{
-				//	sampleBoss->SetColor({ 1,0,0,1 });
-				//	hitBoss++;
-				//}
+				if (Collision::CheckSphere2Box(pBullet, enemyBullet))
+				{
+					samplePlayer->SetColor({ 0,0,1,1 });
+				}
+			
+				if (hit > 5 && Collision::CheckSphere2Box(pBullet, bossEnemy))
+				{
+					sampleBoss->SetColor({ 1,0,0,1 });
+					hitBoss++;
+				}
 			}
 		}
 
-		ImGui::Begin("Info");
-		ImGui::SetWindowPos(ImVec2(20, 20), ImGuiCond_::ImGuiCond_FirstUseEver);
-		ImGui::SetWindowSize(ImVec2(300, 200), ImGuiCond_::ImGuiCond_FirstUseEver);
-		ImGui::Text("(%.1f FPS)", ImGui::GetIO().Framerate);
-		ImGui::Text("LSticlRot %.1f", Xinput->GetPadLStickAngle());
-		ImGui::Text("RSticlRot %.1f", Xinput->GetPadRStickAngle());
-		ImGui::Text("cameraPos( %.1f, %.1f, %.1f )", cameraPos.x, cameraPos.y, cameraPos.z);
-		ImGui::Text("num( %.5f, %.5f, %.5f )", num.x, num.y, num.z);
-		ImGui::Text("hit %d", hit);
-		ImGui::Text("hitBoss %d", hitBoss);
-		ImGui::Text("ZE  UP/DOWN");
-		ImGui::Text("AD  LEFT/RIGHT");
-		ImGui::Text("SPACE  SHOT");
-		ImGui::End();
+		//POINT mousePos;
+		//GetCursorPos(&mousePos);
 
 		for (int i = 0;i < enemyNum;i++)
 		{
 			sampleEnemy[i]->Update();
+			sampleBulletEnemy[i]->Update();
 		}
 
-		sampleBoss->Update();
 		sampleBoss->SetPosition(bPos);
-		sampleBoss->SetScale({ 20.0f,20.0f,20.0f });
-		sampleBoss->SetColor({ 1,1,1,1 });
+		sampleBoss->SetScale({ 10.0f,10.0f,10.0f });
+		sampleBoss->SetColor({ 1.0f,1.0f,1.0f,1.0f });
+		sampleBoss->Update();
 
 		samplePlayer->SetPosition(pPos);
 		samplePlayer->SetScale({ 0.5f,0.5f,0.5f });
@@ -421,6 +486,8 @@ void GameScene::Update()
 		camera->FollowingCamera(vUpAxis, vForwardAxis, pPos);
 
 		operation->SetPosition({ 50.0f,550.0f });
+
+		Reticle();
 	}
 
 	else if (scene == end)
@@ -472,11 +539,12 @@ void GameScene::Draw()
 		Object3d::BeforeDraw(cmdList);
 
 		// 3Dオブジェクト描画
-		if (hit < 5)
+		if (hit <= 5)
 		{
 			for (int i = 0;i < enemyNum;i++)
 			{
 				sampleEnemy[i]->Draw();
+				sampleBulletEnemy[i]->Draw();
 			}
 		}
 
@@ -507,6 +575,7 @@ void GameScene::Draw()
 		//timer->Draw();
 		
 		operation->Draw();
+		//reticle->Draw();
 
 		// デバッグテキストの描画
 		debugText.DrawAll(cmdList);
@@ -561,4 +630,70 @@ void GameScene::CreateParticles()
 		// 追加
 		particleMan->Add(60, pos, vel, acc, 1.0f, 0.0f);
 	}
+}
+
+void GameScene::Reticle()
+{
+	// マウスの座標取得
+	POINT mousePos;
+	GetCursorPos(&mousePos);
+
+	// クライアントエリア座標に変換
+	HWND hwnd = win->GetHwnd();
+	ScreenToClient(hwnd, &mousePos);
+
+	// スプライト座標に代入
+	reticlePos.x = static_cast<float> (mousePos.x) - 32.0f;
+	reticlePos.y = static_cast<float> (mousePos.y) - 32.0f;
+	reticle->SetPosition(reticlePos);
+
+	// ビュープロジェクションビューポート行列合成
+	XMMATRIX matView, matProjection, matViewPort;
+	matView = camera->GetViewMatrix();
+	matProjection = camera->GetProjectionMatrix();
+	matViewPort = {
+		WindowApp::winWidth / 2, 0, 0, 0,
+		0,-WindowApp::winHeight / 2, 0, 0,
+		0,0, 1, 0,
+		WindowApp::winWidth / 2, WindowApp::winHeight / 2, 0, 1
+	};
+	XMMATRIX matVPV = matView * matProjection * matViewPort;
+
+	// 合成行列の逆行列を計算する
+	XMMATRIX matInverseVPV = XMMatrixInverse(nullptr, matVPV);
+
+	// スクリーン座標
+	XMFLOAT3 posNear = XMFLOAT3(mousePos.x, mousePos.y, 0);
+	XMFLOAT3 posFar = XMFLOAT3(mousePos.x, mousePos.y, 1);
+
+	// スクリーン座標系からワールド座標へ
+	XMVector3TransformCoordStream(&posNear, sizeof(XMFLOAT3), &posNear, sizeof(XMFLOAT3), 1, matInverseVPV);
+	XMVector3TransformCoordStream(&posFar, sizeof(XMFLOAT3), &posFar, sizeof(XMFLOAT3), 1, matInverseVPV);
+
+	//　マウスレイの方向
+	XMFLOAT3 mouseDirection = { posFar.x - posNear.x, posFar.y - posNear.y ,posFar.z - posNear.z };
+	float mouseDirectionLength = sqrtf(pow(mouseDirection.x, 2) + pow(mouseDirection.y, 2) + pow(mouseDirection.z, 2));
+	float mouseDirectionNormalize = 1 / mouseDirectionLength;
+
+	// カメラから標準オブジェクトの距離
+	const float kDistanceTestObject = 20.0f;
+	XMFLOAT3 translation = { posNear.x * mouseDirectionNormalize, posNear.y * mouseDirectionNormalize, posNear.z * mouseDirectionNormalize };
+	for (int i = 0;i < pBulletNum;i++)
+	{
+		//sampleBullet[i]->SetPosition(translation);
+	}
+
+
+
+	// コントローラーの処理
+	//XInputManager* Xinput = XInputManager::GetInstance();
+	//if (Xinput->RightStickX(true) || Xinput->RightStickX(false) || Xinput->RightStickY(true) || Xinput->RightStickY(false))
+	//{
+	//	float RSticlRot = Xinput->GetPadRStickAngle();
+	//	float angle = XMConvertToRadians(RSticlRot);
+	//	reticlePos.x += cosf(angle) * 10.0f;
+	//	reticlePos.y -= sinf(angle) * 10.0f;
+	//}
+	//
+	//reticle->SetPosition(reticlePos);
 }

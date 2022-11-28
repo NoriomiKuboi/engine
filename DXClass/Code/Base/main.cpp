@@ -51,7 +51,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	postEffect->Init();
 
 	// ゲームシーン初期化
-	gameScene->Init(dxCommon.get(), input.get(), audio.get());
+	gameScene->Init(win.get(), dxCommon.get(), input.get(), audio.get());
 
 	imgui = new ImguiManager(win->GetHwnd(), dxCommon->GetDev(), dxCommon->GetCmdList());
 
